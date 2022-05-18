@@ -246,3 +246,98 @@ emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="
 emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
+
+
+####### Behavioral data #######
+###### Behavioral: NA ######
+formula <- 'VAS_NA ~ fileNum * taskType + (1|participantNum)' # Declare formula
+
+dataModel = audioData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+# d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+# d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+
+# Model Selection
+modelNames = c(d0.1)
+tabel <- cbind(AIC(d0.1))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+
+Anova(chosenModel[[1]], type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+###### Behavioral: PAA ######
+formula <- 'VAS_PAA ~ fileNum * taskType + (1|participantNum)' # Declare formula
+
+dataModel = audioData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+# d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+# d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+
+# Model Selection
+modelNames = c(d0.1)
+tabel <- cbind(AIC(d0.1))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+
+Anova(chosenModel[[1]], type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+###### Behavioral: PSA ######
+formula <- 'VAS_PSA ~ fileNum * taskType + (1|participantNum)' # Declare formula
+
+dataModel = audioData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+# d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+# d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+
+# Model Selection
+modelNames = c(d0.1)
+tabel <- cbind(AIC(d0.1))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+
+Anova(chosenModel[[1]], type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+###### Behavioral: Stress ######
+formula <- 'VAS_Stress ~ fileNum * taskType + (1|participantNum)' # Declare formula
+
+dataModel = audioData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+# d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+# d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+
+# Model Selection
+modelNames = c(d0.1)
+tabel <- cbind(AIC(d0.1))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+
+Anova(chosenModel[[1]], type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
