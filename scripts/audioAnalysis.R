@@ -97,8 +97,8 @@ plot(effect("fileName:taskType", chosenModel[[1]]))
 plot(effect("experimentPhase", chosenModel[[1]]))
 plot(effect("fileNum:taskType", chosenModel[[1]]))
 
-emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
-emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
@@ -341,3 +341,7 @@ emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="
 emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
+
+
+####### Correlations #######
+cor.test(audioData$F0semitoneFrom27.5Hz_sma3nz_amean, audioData$VAS_Stress, method=c("pearson", "kendall", "spearman"))
