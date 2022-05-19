@@ -15,14 +15,12 @@ dev.off() # Clear plot window
 # Set and Get directories
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) #Set WD to script location
 nAGQ = 1
-# BASEPATH <- "Z:/shares/ghep_lab/2021_VanhollebekeKappen_EEGStudy2_MIST_Cyberball_Audio/"
-BASEPATH <- "D:/Data/EEG_Study_2/"
-plotPrefix <- paste0(BASEPATH, "Data/Interim/Audio/figures/")
+plotPrefix <- "../figures/"
 
 ##### Loading data ##### 
 # Audio Data
 audioData <-
-  as.data.frame(read_parquet(paste0(BASEPATH,"Data/Raw/Audio/df_gemaps_func.parquet")))
+  as.data.frame(read_parquet("../loc_data/df_gemaps_func.parquet"))
 
 # Limesurvey Data
 questionData <- as.data.frame(read.csv("../loc_data/QuestionnaireResults.csv")) 
@@ -30,7 +28,7 @@ questionData$participantNum = questionData$Participant.Number # Change name for 
 
 # Behavioral Data
 behavioralData <-
-  as.data.frame(read_parquet(paste0(BASEPATH,"Data/Raw/Behavioral/behavioralData_CYBB_MIST.parquet")))
+  as.data.frame(read_parquet("../loc_data/behavioralData_CYBB_MIST.parquet"))
 behavioralData$participantNum = behavioralData$participant_ID # Change name for merge
 behavioralData <- behavioralData[c("participantNum", # Create smaller dataframe with only relevant variables
                          "Mean_SCRS_Baseline", "Mean_SCRS_Control", "Mean_SCRS_Stress", 
