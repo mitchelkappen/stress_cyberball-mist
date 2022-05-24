@@ -58,22 +58,27 @@ if True:
             ).rename(f"ECG_R_Peaks_{ecg_cleaned.name}_{method}")
         ]
 
-    def filter_peaks(detected_r_peaks: pd.Series, n_peaks, q=0.1, use_std=True) -> pd.Series:
+    def filter_peaks(
+        detected_r_peaks: pd.Series, n_peaks, q=0.2, use_std=True
+    ) -> pd.Series:
         r = detected_r_peaks.rolling(n_peaks, center=True)
         threshold = r.quantile(quantile=q)
         if use_std:
             threshold -= r.std()
-        detected_r_peaks = detected_r_peaks[(detected_r_peaks > threshold) | (detected_r_peaks > 400)].copy()
-        return [detected_r_peaks, threshold.copy().rename(detected_r_peaks.name + '_threshold')]
+        # print(detected_r_peaks.name, "threshold:", threshold.describe())
+        detected_r_peaks = detected_r_peaks[
+            (detected_r_peaks > threshold) | (detected_r_peaks > 0.45)
+        ].copy()
+        return [
+            detected_r_peaks,
+            threshold.copy().rename(detected_r_peaks.name + "_threshold"),
+        ]
 
     def merge_ecg_r_peaks_series(*ecg_series) -> pd.Series:
         df_m = None
         for s in ecg_series:
             if len(s) == 0:
                 continue
-
-            s = s.copy()
-            s.iloc[:] = 1
 
             if df_m is None:
                 df_m = s.to_frame()
@@ -135,8 +140,8 @@ if True:
 # -------- Hyper params
 if True:
     mean_resample_fs_list = [
-        ("ECG_mean_500Hz", 500),
-        ("ECG_mean_200Hz", 200),
+        # ("ECG_mean_500Hz", 500),
+        # ("ECG_mean_200Hz", 200),
     ]
 
     scipy_resample_fs_list = [
@@ -151,18 +156,18 @@ if True:
     #   "elgendi2010", "engzeemod2012", "martinez2003", "rodrigues2021", "promac",
     sig_fs_rpeakmethod_list = [
         ("ECG", 1000, "neurokit"),
-        ("ECG_cleaned_biosppy", 1000, "martinez"),
+        # ("ECG_cleaned_biosppy", 1000, "martinez"),
         ("ECG_cleaned_biosppy", 1000, "neurokit"),
         # ("ECG_cleaned_biosppy", 1000, "gamboa"),
-        # ("ECG_scipy_200Hz", 200, "neurokit"),
+        ("ECG_scipy_200Hz", 200, "neurokit"),
         # TODO -> uncomment these below
-        ("ECG_mean_200Hz", 200, "neurokit"),
+        # ("ECG_mean_200Hz", 200, "neu"),
         ("ECG_scipy_200Hz_cleaned_biosppy", 200, "neurokit"),
-        ("ECG_mean_200Hz_cleaned_biosppy", 200, "neurokit"),
-        ("ECG_scipy_500Hz", 500, "martinez"),
-        ("ECG_mean_500Hz", 500, "neurokit"),
-        ("ECG_scipy_500Hz_cleaned_biosppy", 500, "martinez"),
-        ("ECG_mean_500Hz_cleaned_biosppy", 500, "neurokit"),
+        # ("ECG_mean_200Hz_cleaned_biosppy", 200, "neurokit"),
+        ("ECG_scipy_500Hz", 500, "neurokit"),
+        # ("ECG_mean_500Hz", 500, "neurokit"),
+        ("ECG_scipy_500Hz_cleaned_biosppy", 500, "neurokit"),
+        # ("ECG_mean_500Hz_cleaned_biosppy", 500, "neurokit"),
     ]
 
 ecg_pipeline = SeriesPipeline(
@@ -214,13 +219,15 @@ ecg_pipeline = SeriesPipeline(
             for series_names, fs, method in sig_fs_rpeakmethod_list
         ],
         # ----- 3.1 Filtering the peaks (based on amplitude)
+        # This filters the peaks signal and returns a new threshold signal -> which is 
+        # that filter it's threshold.
         SeriesProcessor(
             series_names=[
                 "_".join(["ECG_R_Peaks", name, suffix])
                 for name, _, suffix in sig_fs_rpeakmethod_list
             ],
             function=filter_peaks,
-            n_peaks=1001, # TODO -> use quantile based peak approach to determine this 
+            n_peaks=1001,  # TODO -> use quantile based peak approach to determine this
             q=0.4,
             use_std=True
             # threshold
@@ -229,9 +236,6 @@ ecg_pipeline = SeriesPipeline(
             series_names=tuple(
                 [
                     "_".join(["ECG_R_Peaks", name, suffix])
-                    for name, _, suffix in sig_fs_rpeakmethod_list
-                ] +                 [
-                    "_".join(["ECG_R_Peaks", name, suffix, "threshold"])
                     for name, _, suffix in sig_fs_rpeakmethod_list
                 ]
             ),
@@ -253,19 +257,19 @@ def process_ecg(ecg_raw: pd.Series) -> pd.DataFrame:
         if c.name == "ECG_R_Peaks_processed":
             r_peaks = c.dropna()
             rr = (
-                    r_peaks.index.to_series()
-                    .diff()[1:]
-                    .dt.total_seconds()
-                    .rename("RR_interval_ms")
-                    * 1000
+                r_peaks.index.to_series()
+                .diff()[1:]
+                .dt.total_seconds()
+                .rename("RR_interval_ms")
+                * 1000
             )
             hrv = (
-                    r_peaks.index.to_series()
-                    .diff()
-                    .diff()[2:]
-                    .dt.total_seconds()
-                    .rename("HRV_ms")
-                    * 1000
+                r_peaks.index.to_series()
+                .diff()
+                .diff()[2:]
+                .dt.total_seconds()
+                .rename("HRV_ms")
+                * 1000
             )
 
             time_agreement_mask = (r_peaks.shift(1) & r_peaks).values

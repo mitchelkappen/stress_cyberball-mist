@@ -76,7 +76,7 @@ def plot_ecg_cols(f, df_s, row_idx):
 
         print(col, df_s[col].dtype)  # df_s[col])
 
-        if col.startswith("ECG_R_Peaks_"):
+        if col.startswith("ECG_R_Peaks_") and not col.endswith('_threshold'):
 
             # raw_symbols = SymbolValidator().values[:5]
             # import random
@@ -542,7 +542,7 @@ def plot_multi_sensors(
     # 1. Visualize the sensor data
     row_idx = 1 + len(prev_rows)
     for sensor in sorted(Path(folder).joinpath(user).glob(f"*{paradigm}.parquet")):
-        df_sensor = pd.read_parquet(sensor).drop(columns=["trigger"]) #[start:end]
+        df_sensor = pd.read_parquet(sensor).drop(columns=["trigger"])[start:end]
 
         for c in df_sensor.columns:
             if c == "ECG" and "process ECG" in har_checklist:
