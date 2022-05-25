@@ -7,6 +7,9 @@
 # 
 # Author: Mitchel Kappen 
 # 6-4-2022
+
+library(arrow) # Parquets
+
 ##### Set environment #####
 rm(list = ls()) # Clear environment
 cat("\014") # Clear console
