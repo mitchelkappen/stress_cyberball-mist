@@ -24,8 +24,8 @@ plotPrefix <- "../figures/"
 
 ##### Loading data ##### 
 # Audio Data
-hrvdata <-
-  as.data.frame(read_parquet("../loc_data/df_rr_feat.parquet"))
+hrvdata <- as.data.frame(read_parquet("../loc_data/df_rr_feat.parquet"))
+hrvdata <- as.data.frame(read_parquet("../loc_data/df_rr_feat_last_5min.parquet"))
 
 # This part if just the control vs stress block
 mist = hrvdata[hrvdata$trigger == "Start MIST stress" | hrvdata$trigger == "Start MIST control", ]
@@ -45,12 +45,21 @@ data$trigger[grepl("Start cyberball control", data$trigger)] = 'Control'
 
 data$trigger[grepl("Start cyberball control", data$trigger)] = 'Control'
 
+data$trigger[data$trigger == "Start rest baseline (eyes closed)"] = "Baseline (closed)"
+data$trigger[data$trigger == "Start rest baseline (eyes open)"] = "Baseline (open)"
+
+data$trigger[data$trigger == "Start rest control (eyes closed)"] = "Rest Control (closed)"
+data$trigger[data$trigger == "Start rest control (eyes open)"] = "Rest Control (open)"
+
+data$trigger[data$trigger == "Start rest stress (eyes closed)"] = "Rest Stress (closed)"
+data$trigger[data$trigger == "Start rest stress (eyes open)"] = "Rest Stress (open)"
+
 data$phase = factor(data$trigger, ordered = TRUE, 
-       levels = c("Start rest baseline (eyes closed)", "Start rest baseline (eyes open)",
+       levels = c("Baseline (closed)", "Baseline (open)",
                   "Control", 
-                  "Start rest control (eyes closed)", "Start rest control (eyes open)",
+                  "Rest Control (closed)", "Rest Control (open)",
                   "Stress",
-                  "Start rest stress (eyes closed)", "Start rest stress (eyes open)"))
+                  "Rest Stress (closed)", "Rest Stress (open)"))
 
 data = data[nchar(data$condition) == 4, ] # Kick out the ones with weird condition name - means exclusion
 
