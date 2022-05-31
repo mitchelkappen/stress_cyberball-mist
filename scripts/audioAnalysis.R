@@ -116,6 +116,7 @@ emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
 figure = behaviorplot(emm0.1, fileNum, taskType, "F0 (Pitch)") # Create plot
+figure = addpvalues(figure, emmeans0.1)
 savePlot(figure, "F0") # Display and save plot
 
 ###### Speech features: Jitter ######
@@ -146,6 +147,7 @@ emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
 figure = behaviorplot(emm0.1, fileNum, taskType, "Jitter") # Create plot
+figure = addpvalues(figure, emmeans0.1)
 savePlot(figure, "Jitter") # Display and save plot
 
 ###### Speech features: Shimmer ######
@@ -173,6 +175,7 @@ emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
 figure = behaviorplot(emm0.1, fileNum, taskType, "Shimmer") # Create plot
+figure = addpvalues(figure, emmeans0.1)
 savePlot(figure, "Shimmer") # Display and save plot
 
 ###### Speech features: HNR ######
@@ -203,6 +206,7 @@ emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
 figure = behaviorplot(emm0.1, fileNum, taskType, "Harmonics-to-Noise Ratio") # Create plot
+figure = addpvalues(figure, emmeans0.1)
 savePlot(figure, "HNR") # Display and save plot
 
 ###### Speech features: mean seg length ######
@@ -230,6 +234,7 @@ emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
 figure = behaviorplot(emm0.1, fileNum, taskType, "Mean Voiced Segment Length") # Create plot
+figure = addpvalues(figure, emmeans0.1)
 savePlot(figure, "MeanSegLength") # Display and save plot
 
 ###### Speech features: voiced segs per sec ######
@@ -257,6 +262,7 @@ emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
 figure = behaviorplot(emm0.1, fileNum, taskType, "Speech rate") # Create plot
+figure = addpvalues(figure, emmeans0.1)
 savePlot(figure, "VoicedSegmensPerSec") # Display and save plot
 
 ####### Behavioral data #######
@@ -285,6 +291,7 @@ emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
 figure = behaviorplot(emm0.1, fileNum, taskType, "Negative Affect") # Create plot
+figure = addpvalues(figure, emmeans0.1)
 savePlot(figure, "NegativeAffect") # Display and save plot
 
 ###### Behavioral: PAA ######
@@ -312,6 +319,7 @@ emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
 figure = behaviorplot(emm0.1, fileNum, taskType, "Postive Activating Affect") # Create plot
+figure = addpvalues(figure, emmeans0.1)
 savePlot(figure, "PostiveActivatingAffect") # Display and save plot
 
 ###### Behavioral: PSA ######
