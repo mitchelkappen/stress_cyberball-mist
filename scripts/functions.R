@@ -71,43 +71,13 @@ addpvalues <-
     means = summary(emmean$emmeans) # Set up emmeans variable
     contrasts = summary(emmean$contrasts) # Set up contrast variable
     
-    str = as.character(contrasts$contrast[contrasts$p.value < 0.05][1]) # Find relevant string contrast
-    emm1 = sub(" -.*", "", str) # Get first part of string for 1st emmeans
-    emm2 = sub(".* - ", "", str) # Get second part of string for 1st emmeans
-    
-    task = as.character(contrasts$taskType[contrasts$p.value < 0.05][1]) # Get correct corresponding task
-    index1 = means$taskType == task & means$fileNum == emm1 # Compute logical index for relevant values
-    index2 = means$taskType == task & means$fileNum == emm2
-    
-    emmeanloc = mean(c(means$emmean[index1],means$emmean[index2])) # Compute mean of the two emmeans for positioning
-    stdev = sd(c(means$emmean[index1],means$emmean[index2]))
-    
-    # Check for significance level
-    if(contrasts$p.value[contrasts$p.value < 0.05][1] < .001){
-      significance = '***'
-    }else if(contrasts$p.value[contrasts$p.value < 0.05][1] < .01){
-      significance = '**'
-    }else if(contrasts$p.value[contrasts$p.value < 0.05][1] < .05){
-      significance = '*'
-    }
-    
-    # Give significance stars corresponding colors for clarity
-    if(task == 'Cyberball'){
-      color = cbPalette[1]
-    }else{
-      color = cbPalette[2]
-    }
-    
-    # Add significance to plot and return plot
-    gplot = gplot + annotate(geom="text", x= 1.5, y=emmeanloc + stdev/7, label=significance, color=color, size = 10) #IBI2
-      
-      
-    if(sum(contrasts$p.value < 0.05) == 2){ # Check if there is 2 significant p-values
-      str = as.character(contrasts$contrast[contrasts$p.value < 0.05][2]) # Find relevant string contrast
+    numberofsigs = sum(contrasts$p.value < 0.05)
+    for(i in 1:numberofsigs){ # Loop over number of significant contrasts
+      str = as.character(contrasts$contrast[contrasts$p.value < 0.05][i]) # Find relevant string contrast
       emm1 = sub(" -.*", "", str) # Get first part of string for 1st emmeans
       emm2 = sub(".* - ", "", str) # Get second part of string for 1st emmeans
       
-      task = as.character(contrasts$taskType[contrasts$p.value < 0.05][2]) # Get correct corresponding task
+      task = as.character(contrasts$taskType[contrasts$p.value < 0.05][i]) # Get correct corresponding task
       index1 = means$taskType == task & means$fileNum == emm1 # Compute logical index for relevant values
       index2 = means$taskType == task & means$fileNum == emm2
       
@@ -115,11 +85,11 @@ addpvalues <-
       stdev = sd(c(means$emmean[index1],means$emmean[index2]))
       
       # Check for significance level
-      if(contrasts$p.value[contrasts$p.value < 0.05][2] < .001){
+      if(contrasts$p.value[contrasts$p.value < 0.05][i] < .001){
         significance = '***'
-      }else if(contrasts$p.value[contrasts$p.value < 0.05][2] < .01){
+      }else if(contrasts$p.value[contrasts$p.value < 0.05][i] < .01){
         significance = '**'
-      }else if(contrasts$p.value[contrasts$p.value < 0.05][2] < .05){
+      }else if(contrasts$p.value[contrasts$p.value < 0.05][i] < .05){
         significance = '*'
       }
       
@@ -131,15 +101,17 @@ addpvalues <-
       }
       
       # Add significance to plot and return plot
-      gplot = gplot + annotate(geom="text", x= 1.5, y=emmeanloc + stdev/7, label=significance, color=color, size = 10) #IBI2
+      gplot = gplot + annotate(geom="text", x= 1.5, y=emmeanloc + stdev/7, label=significance, color=color, size = 10) # Add the annotation line to the ggplot
+      
     }
-    
     return(gplot)
-    
   }
+
 
 
 savePlot <- function(plotName, filename) {
   ggsave(file=paste0(plotPrefix, filename, ".jpeg"), width = 4000, height = 2800, dpi = 300, units = "px") # Save plot
   print(plotName)
 }
+
+##############
