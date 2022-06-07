@@ -1,0 +1,17 @@
+2022-05-23 11:50:18,008 - feature_processing_logger - INFO - Finished function [low_pass_filter] on [('EDA',)] in [0.029517173767089844 seconds]!
+2022-05-23 11:50:18,010 - feature_processing_logger - INFO - Finished function [slope_sqi] on [('EDA_lf_1Hz',)] in [0.0012271404266357422 seconds]!
+2022-05-23 11:50:18,011 - feature_processing_logger - INFO - Finished function [normalized_noise] on [('EDA', 'EDA_lf_1Hz')] in [0.0009198188781738281 seconds]!
+2022-05-23 11:50:18,013 - feature_processing_logger - INFO - Finished function [<lambda>] on [('noise',)] in [0.0020294189453125 seconds]!
+2022-05-23 11:50:18,014 - feature_processing_logger - INFO - Finished function [threshold_sqi] on [('noise_area_1s',)] in [0.0009171962738037109 seconds]!
+2022-05-23 11:50:18,017 - feature_processing_logger - INFO - Finished function [lost_sqi] on [('EDA',)] in [0.003220081329345703 seconds]!
+2022-05-23 11:50:18,046 - feature_processing_logger - INFO - Finished function [delta_sqi] on [('EDA', 'noise_area_1s')] in [0.028197765350341797 seconds]!
+2022-05-23 11:50:18,046 - feature_processing_logger - INFO - Finished function [sqi_and] on [('eda_lost_SQI', 'eda_delta_SQI', 'eda_noise_SQI', 'eda_slope_SQI')] in [0.0007913112640380859 seconds]!
+2022-05-23 11:50:18,049 - feature_processing_logger - INFO - Finished function [sqi_smoothen] on [('EDA_SQI',)] in [0.002209186553955078 seconds]!
+2022-05-23 11:50:18,074 - feature_processing_logger - INFO - Finished function [interpolate_sqi] on [('EDA', 'EDA_SQI_smoothend')] in [0.02503228187561035 seconds]!
+2022-05-23 11:50:18,076 - feature_processing_logger - INFO - Finished function [filter_duration] on [('raw_cleaned',)] in [0.0020422935485839844 seconds]!
+2022-05-23 11:50:18,079 - feature_processing_logger - INFO - Finished function [low_pass_filter] on [('raw_cleaned_duration_filter',)] in [0.002572298049926758 seconds]!
+2022-05-23 11:50:18,101 - feature_processing_logger - INFO - Finished function [tonic_eda] on [('EDA_lf_cleaned',)] in [0.02244257926940918 seconds]!
+2022-05-23 11:50:18,104 - feature_processing_logger - INFO - Finished function [low_pass_filter] on [('EDA_lf_cleaned_tonic',)] in [0.002341032028198242 seconds]!
+2022-05-23 11:50:18,117 - feature_processing_logger - INFO - Finished function [phasic] on [('EDA_lf_cleaned', 'EDA_lf_cleaned_tonic_lf', 'noise_area_1s')] in [0.013284921646118164 seconds]!
+2022-05-23 11:50:18,551 - feature_processing_logger - INFO - Finished function [find_peaks] on [('EDA_Phasic',)] in [0.4341926574707031 seconds]!
+2022-05-23 11:50:18,562 - feature_processing_logger - INFO - Finished function [dataframe_func: remove_false_positives] on [('SCR_RiseTime', 'SCR_Peaks_neurokit', 'SCR_RecoveryTime', 'SCR_Amplitude')] in [0.010126590728759766 seconds]!
