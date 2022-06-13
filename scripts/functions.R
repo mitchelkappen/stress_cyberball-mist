@@ -72,37 +72,40 @@ addpvalues <-
     contrasts = summary(emmean$contrasts) # Set up contrast variable
     
     numberofsigs = sum(contrasts$p.value < 0.05)
-    for(i in 1:numberofsigs){ # Loop over number of significant contrasts
-      str = as.character(contrasts$contrast[contrasts$p.value < 0.05][i]) # Find relevant string contrast
-      emm1 = sub(" -.*", "", str) # Get first part of string for 1st emmeans
-      emm2 = sub(".* - ", "", str) # Get second part of string for 1st emmeans
-      
-      task = as.character(contrasts$taskType[contrasts$p.value < 0.05][i]) # Get correct corresponding task
-      index1 = means$taskType == task & means$fileNum == emm1 # Compute logical index for relevant values
-      index2 = means$taskType == task & means$fileNum == emm2
-      
-      emmeanloc = mean(c(means$emmean[index1],means$emmean[index2])) # Compute mean of the two emmeans for positioning
-      stdev = sd(c(means$emmean[index1],means$emmean[index2]))
-      
-      # Check for significance level
-      if(contrasts$p.value[contrasts$p.value < 0.05][i] < .001){
-        significance = '***'
-      }else if(contrasts$p.value[contrasts$p.value < 0.05][i] < .01){
-        significance = '**'
-      }else if(contrasts$p.value[contrasts$p.value < 0.05][i] < .05){
-        significance = '*'
+    for(i in 0:numberofsigs){ # Loop over number of significant contrasts
+      if(i > 0){ # Only do stuff if significance present | Yes, this is hacky
+        str = as.character(contrasts$contrast[contrasts$p.value < 0.05][i]) # Find relevant string contrast
+        emm1 = sub(" -.*", "", str) # Get first part of string for 1st emmeans
+        emm2 = sub(".* - ", "", str) # Get second part of string for 1st emmeans
+        
+        task = as.character(contrasts$taskType[contrasts$p.value < 0.05][i]) # Get correct corresponding task
+        index1 = means$taskType == task & means$fileNum == emm1 # Compute logical index for relevant values
+        index2 = means$taskType == task & means$fileNum == emm2
+        
+        emmeanloc = mean(c(means$emmean[index1],means$emmean[index2])) # Compute mean of the two emmeans for positioning
+        stdev = sd(c(means$emmean[index1],means$emmean[index2]))
+        
+        # Check for significance level
+        if(contrasts$p.value[contrasts$p.value < 0.05][i] < .001){
+          significance = '***'
+        }else if(contrasts$p.value[contrasts$p.value < 0.05][i] < .01){
+          significance = '**'
+        }else if(contrasts$p.value[contrasts$p.value < 0.05][i] < .05){
+          significance = '*'
+        }
+        
+        # Give significance stars corresponding colors for clarity
+        if(task == 'Cyberball'){
+          color = cbPalette[1]
+        }else{
+          color = cbPalette[2]
+        }
+        
+        # Add significance to plot and return plot
+        gplot = gplot + annotate(geom="text", x= 1.5, y=emmeanloc + stdev/7, label=significance, color=color, size = 10) # Add the annotation line to the ggplot
+        
       }
-      
-      # Give significance stars corresponding colors for clarity
-      if(task == 'Cyberball'){
-        color = cbPalette[1]
-      }else{
-        color = cbPalette[2]
-      }
-      
-      # Add significance to plot and return plot
-      gplot = gplot + annotate(geom="text", x= 1.5, y=emmeanloc + stdev/7, label=significance, color=color, size = 10) # Add the annotation line to the ggplot
-      
+
     }
     return(gplot)
   }

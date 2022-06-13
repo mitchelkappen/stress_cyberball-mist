@@ -111,7 +111,7 @@ Anova(chosenModel[[1]], type = 'III')
 plot(effect("fileNum:taskType", chosenModel[[1]]))
 
 emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
-emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+# emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
@@ -140,9 +140,7 @@ Anova(d0.1, type = 'III')
 plot(effect("fileNum:taskType", chosenModel[[1]]))
 
 emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
-
-# emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
-# emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
