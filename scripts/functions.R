@@ -110,7 +110,56 @@ addpvalues <-
     return(gplot)
   }
 
-
+addpvaluesBetween <- 
+  function(gplot, emmean){
+    means = summary(emmean$emmeans) # Set up emmeans variable
+    contrasts = summary(emmean$contrasts) # Set up contrast variable
+    
+    numberofsigs = sum(contrasts$p.value < 0.05)
+    for(i in 0:numberofsigs){ # Loop over number of significant contrasts
+      if(i > 0){ # Only do stuff if significance present | Yes, this is hacky
+        str = as.character(contrasts$contrast[contrasts$p.value < 0.05][i]) # Find relevant string contrast
+        emm1 = sub(" -.*", "", str) # Get first part of string for 1st emmeans
+        emm2 = sub(".* - ", "", str) # Get second part of string for 1st emmeans
+        
+        task = as.character(contrasts$fileNum[contrasts$p.value < 0.05][i]) # Get correct corresponding task
+        index1 = means$fileNum == task & means$taskType == emm1 # Compute logical index for relevant values
+        index2 = means$fileNum == task & means$taskType == emm2
+        
+        emmeanloc = mean(c(means$emmean[index1],means$emmean[index2])) # Compute mean of the two emmeans for positioning
+        stdev = sd(c(means$emmean[index1],means$emmean[index2]))
+        
+        # Check for significance level
+        if(contrasts$p.value[contrasts$p.value < 0.05][i] < .001){
+          significance = '***'
+        }else if(contrasts$p.value[contrasts$p.value < 0.05][i] < .01){
+          significance = '**'
+        }else if(contrasts$p.value[contrasts$p.value < 0.05][i] < .05){
+          significance = '*'
+        }
+        
+        # Add significance to plot and return plot
+        if(task == "Control Task"){
+          xloc = 0.8
+          xloc2 = xloc + xloc / 20
+        }else if(task == "Stress Task"){
+          xloc = 2.2
+          xloc2 = xloc - xloc / 20
+        }
+        
+        ystart = means$emmean[index1]
+        yend = means$emmean[index2]
+        
+        gplot = gplot + geom_segment( aes(x = xloc2, y = ystart, xend = xloc2, yend = yend, linetype = "R fans"), linetype = "solid", colour = "black")
+        gplot = gplot + annotate(geom="text", x = xloc, y=emmeanloc, label=significance, color='black', size = 10) # Add the annotation line to the ggplot
+        
+        figure = figure + geom_segment( aes(x = xloc2, y = ystart, xend = xloc2, yend = yend, linetype = "R fans"), linetype = "solid", colour = "black")
+        figure = figure + annotate(geom="text", x = xloc, y=emmeanloc, label=significance, color='black', size = 10)
+      }
+      
+    }
+    return(gplot)
+  }
 
 savePlot <- function(plotName, filename) {
   ggsave(file=paste0(plotPrefix, filename, ".jpeg"), width = 4000, height = 2800, dpi = 300, units = "px") # Save plot
