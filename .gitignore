@@ -2,3 +2,5 @@
 *.xlsx
 *.csv
 *.parquet
+*.jpeg
+*.pdf
