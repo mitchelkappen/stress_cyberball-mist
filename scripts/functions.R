@@ -140,21 +140,26 @@ addpvaluesBetween <-
         
         # Add significance to plot and return plot
         if(task == "Control Task"){
-          xloc = 0.8
-          xloc2 = xloc + xloc / 20
+          xloc[i] = 0.8
+          xloc2[i] = xloc[i] + xloc[i] / 20
         }else if(task == "Stress Task"){
-          xloc = 2.2
-          xloc2 = xloc - xloc / 20
+          xloc[i] = 2.2
+          xloc2[i] = xloc[i] - xloc[i] / 20
         }
         
-        ystart = means$emmean[index1]
-        yend = means$emmean[index2]
+        ystart[i] = means$emmean[index1]
+        yend[i] = means$emmean[index2]
         
-        gplot = gplot + geom_segment( aes(x = xloc2, y = ystart, xend = xloc2, yend = yend, linetype = "R fans"), linetype = "solid", colour = "black")
-        gplot = gplot + annotate(geom="text", x = xloc, y=emmeanloc, label=significance, color='black', size = 10) # Add the annotation line to the ggplot
+        if(i == 1){
+          gplot = gplot + geom_segment( aes(x = xloc2[1], y = ystart[1], xend = xloc2[1], yend = yend[1], linetype = "R fans"), linetype = "solid", colour = "black")
+          gplot = gplot + annotate(geom="text", x = xloc[1], y=emmeanloc, label=significance, color='black', size = 10, hjust = 1) # Add the annotation line to the ggplot
+        }else if(i == 2){
+          gplot = gplot + geom_segment( aes(x = xloc2[2], y = ystart[2], xend = xloc2[2], yend = yend[2], linetype = "R fans"), linetype = "solid", colour = "black")
+          gplot = gplot + annotate(geom="text", x = xloc[2], y=emmeanloc, label=significance, color='black', size = 10, hjust = 0) # Add the annotation line to the ggplot
+        }
         
-        figure = figure + geom_segment( aes(x = xloc2, y = ystart, xend = xloc2, yend = yend, linetype = "R fans"), linetype = "solid", colour = "black")
-        figure = figure + annotate(geom="text", x = xloc, y=emmeanloc, label=significance, color='black', size = 10)
+        # figure = figure + geom_segment( aes(x = xloc2[i], y = ystart, xend = xloc2[i], yend = yend, linetype = "R fans"), linetype = "solid", colour = "black")
+        # figure = figure + annotate(geom="text", x = xloc[i], y=emmeanloc, label=significance, color='black', size = 10)
       }
       
     }
