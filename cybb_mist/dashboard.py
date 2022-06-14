@@ -76,7 +76,7 @@ def plot_ecg_cols(f, df_s, row_idx):
 
         print(col, df_s[col].dtype)  # df_s[col])
 
-        if col.startswith("ECG_R_Peaks_") and not col.endswith('_threshold'):
+        if col.startswith("ECG_R_Peaks_") and not col.endswith("_threshold"):
 
             # raw_symbols = SymbolValidator().values[:5]
             # import random
@@ -205,7 +205,7 @@ def plot_ecg_cols(f, df_s, row_idx):
                 name=col,
                 legendgroup="ECG_R_Peaks_" + col,
                 mode="lines+ markers" if col == "r_peak_agreement" else "lines",
-                line_shape='hvh' if col == 'r_peak_agrement' else "linear"
+                line_shape="hvh" if col == "r_peak_agrement" else "linear",
             ),
             max_n_samples=1000,
             hf_x=df_s[col].dropna().index,
@@ -224,20 +224,20 @@ def plot_ecg_cols(f, df_s, row_idx):
 def plot_gsr_cols(f, df_s, row_idx):
     secondary_y_cols = ["EDA_SQI_smoothend"]
     skip_cols = [
-        # "eda_lost_SQI",
-        # "EDA_delta_SQI",
-        # "eda_delta_SQI",
-        # "eda_large_delta_SQI",
-        # "eda_slope_SQI",
-        # "eda_noise_SQI",
-        "EDA_lf_1Hz",
+        "eda_lost_SQI",
+        "EDA_delta_SQI",
+        "eda_delta_SQI",
+        "eda_large_delta_SQI",
+        "eda_slope_SQI",
+        "eda_noise_SQI",
+        # "EDA_lf_1Hz",
         "raw_cleaned",
         "raw_cleaned_duration_filter",
         # "EDA_lf_cleaned_tonic",
         # TODO
-        "SCR_Amplitude",
-        "SCR_RiseTime",
-        "SCR_RecoveryTime",
+        # "SCR_Amplitude",
+        # "SCR_RiseTime",
+        # "SCR_RecoveryTime",
         # "SCR_Peaks_neurokit",
         # "noise_area_1s",
         # "EDA_SQI_smoothend",
@@ -250,15 +250,20 @@ def plot_gsr_cols(f, df_s, row_idx):
         "slope",
         "ACC_std",
         "noise",
-        "noise_area_1s",
+        "noise_mean_1s",
+        "noise_mean_2s",
         "acc_energy",
         # TODO added these
-        "eda_lost_SQI",
+        "EDA_lost_SQI",
         "EDA_delta_SQI",
         "eda_delta_SQI",
         "eda_large_delta_SQI",
-        "eda_slope_SQI",
-        "eda_noise_SQI",
+        "EDA_slope_SQI",
+        "EDA_noise_SQI",
+        "SCR_Amplitude",
+        "SCR_RiseTime",
+        "SCR_RecoveryTime",
+        "phasic_noise_ratio",
     ]
     cols = sorted(set(df_s.columns.values).difference(["index"]))
     for col in cols:
@@ -422,16 +427,19 @@ def plot_multi_sensors(
     har_checklist,
     folder_user_subfolder_list: List[Tuple[str, str, str, str, str, List[str]]],
     session_id,
+    paradigm,
     number_of_samples,
 ) -> go.Figure:
     global fig_dict
 
-    # create the figures
-    prev_rows: List[str] = ["timeline"]
-
-    paradigm = "mist"
-    # Path(folder).joinpath(user).glob(f'*{paradigm}*.parquet')
     har_checklist = [h.strip() for h in har_checklist]
+
+    # create the figures
+    prev_rows: List[str] = []
+    if "show timeline" in har_checklist:
+        prev_rows += ["timeline"]
+
+
     print(folder_user_subfolder_list)
     folder, user, subfolder = folder_user_subfolder_list[0]
     sensors_names = (
@@ -486,7 +494,7 @@ def plot_multi_sensors(
 
     # 0. Visualize the mBrain timeline
     legend_names = []
-    if True:
+    if "timeline" in prev_rows:
         df_trigger = parse_trigger_series(
             pd.read_parquet(Path(folder).joinpath(user, f"SCL_{paradigm}.parquet"))[
                 "trigger"
@@ -538,6 +546,13 @@ def plot_multi_sensors(
                     row=1,
                     col=1,
                 )
+    else:
+        df_trigger = parse_trigger_series(
+            pd.read_parquet(Path(folder).joinpath(user, f"SCL_{paradigm}.parquet"))[
+                "trigger"
+            ]
+        )
+        start, end = df_trigger.t_start.iloc[0], df_trigger.t_start.iloc[-1]
 
     # 1. Visualize the sensor data
     row_idx = 1 + len(prev_rows)
@@ -609,13 +624,22 @@ def serve_layout() -> dbc.Container:
                                         dcc.Checklist(
                                             id="har-checklist",
                                             options=[
+                                                " show timeline",
                                                 " process ECG",
                                                 " process GSR",
                                             ],
                                         ),
                                         html.Br(),
+                                        dbc.Label("paradigm:"),
+                                        dcc.Dropdown(
+                                            id=f"paradigm-selector",
+                                            options=["mist", "cybb"],
+                                            value="mist",
+                                            clearable=False,
+                                        ),
                                     ]
-                                )
+                                ),
+                                html.Br(),
                             ]
                             + [
                                 dbc.Card(
@@ -766,11 +790,12 @@ def update_graph(relayoutdata: dict, session_id: str):
         Input("plot-button", "n_clicks"),
         State("har-checklist", "value"),
         State("session-id", "children"),
+        State("paradigm-selector", "value"),
         *selector_states,
     ],
 )
-def plot_or_update_graph(n_clicks, har_checklist, session_id, *folder_list):
-    print(har_checklist)
+def plot_or_update_graph(n_clicks, har_checklist, session_id, paradigm, *folder_list):
+    print(paradigm)
     har_checklist = [] if har_checklist is None else har_checklist
     global fig_dict
     if session_id not in fig_dict.keys():
@@ -792,6 +817,7 @@ def plot_or_update_graph(n_clicks, har_checklist, session_id, *folder_list):
     ):
         return plot_multi_sensors(
             har_checklist=har_checklist,
+            paradigm=paradigm,
             folder_user_subfolder_list=folder_user_subfolder_list,
             session_id=session_id,
             number_of_samples=1000,
@@ -801,4 +827,4 @@ def plot_or_update_graph(n_clicks, har_checklist, session_id, *folder_list):
 
 # + tags=[]
 if __name__ == "__main__":
-    app.run_server(port=8065, host="0.0.0.0", debug=True)
+    app.run_server(port=8066, host="0.0.0.0", debug=True)
