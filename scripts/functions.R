@@ -116,6 +116,10 @@ addpvaluesBetween <-
     contrasts = summary(emmean$contrasts) # Set up contrast variable
     
     numberofsigs = sum(contrasts$p.value < 0.05)
+    
+    # Create empty variables to append to
+    xloc = 0; xloc2 = 0; ystart = 0; yend = 0;
+    
     for(i in 0:numberofsigs){ # Loop over number of significant contrasts
       if(i > 0){ # Only do stuff if significance present | Yes, this is hacky
         str = as.character(contrasts$contrast[contrasts$p.value < 0.05][i]) # Find relevant string contrast
