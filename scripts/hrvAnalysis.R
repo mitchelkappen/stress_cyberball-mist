@@ -26,6 +26,7 @@ plotPrefix <- "../figures/"
 # Audio Data
 hrvdata <- as.data.frame(read_parquet("../loc_data/df_rr_feat.parquet"))
 hrvdata <- as.data.frame(read_parquet("../loc_data/df_rr_feat_last_5min.parquet"))
+hrvdata <- as.data.frame(read_parquet("../loc_data/df_feat_tot.parquet"))
 
 # This part if just the control vs stress block
 mist = hrvdata[hrvdata$trigger == "Start MIST stress" | hrvdata$trigger == "Start MIST control", ]
