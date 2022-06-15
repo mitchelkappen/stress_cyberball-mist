@@ -116,8 +116,361 @@ allData = merge(audioData, physiologicalData, by = c("participantNum","taskType"
 
 summary(allData)
 
+####### Speech features #######
+# Speech features: F0 ######
+formula <- 'F0semitoneFrom27.5Hz_sma3nz_amean ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
 
+datatemp <- audioData[c('F0semitoneFrom27.5Hz_sma3nz_amean', 'fileNum', 'taskType', 'Sex', 'paradigm', 'participantNum')] # Clean dataframe to check with Jens
 
+dataModel = allData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
 
+d0.1 <- lmer(formula,data=dataModel)
+d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
 
+# Model Selection
+modelNames = c(d0.1,d0.2,d0.3)
+tabel <- cbind(AIC(d0.1), AIC(d0.2), AIC(d0.3))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
 
+Anova(chosenModel[[1]], type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+
+figure = behaviorplot(emm0.1, fileNum, taskType, "F0 (Pitch)") # Create plot
+figure = addpvalues(figure, emmeans0.1)
+figure = addpvaluesBetween(figure, emmeans0.2)
+savePlot(figure, "F0") # Display and save plot
+
+# Speech features: Jitter ######
+formula <- 'jitterLocal_sma3nz_amean ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
+
+dataModel = allData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+
+# Model Selection
+modelNames = c(d0.1,d0.2,d0.3)
+tabel <- cbind(AIC(d0.1), AIC(d0.2), AIC(d0.3))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+
+# Anova(chosenModel[[1]], type = 'III')
+Anova(d0.1, type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+
+figure = behaviorplot(emm0.1, fileNum, taskType, "Jitter") # Create plot
+figure = addpvalues(figure, emmeans0.1)
+figure = addpvaluesBetween(figure, emmeans0.2)
+savePlot(figure, "Jitter") # Display and save plot
+
+# Speech features: Shimmer ######
+formula <- 'shimmerLocaldB_sma3nz_amean ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
+
+dataModel = allData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+
+# Model Selection
+modelNames = c(d0.1,d0.2,d0.3)
+tabel <- cbind(AIC(d0.1), AIC(d0.2), AIC(d0.3))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+
+Anova(chosenModel[[1]], type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+
+figure = behaviorplot(emm0.1, fileNum, taskType, "Shimmer") # Create plot
+figure = addpvalues(figure, emmeans0.1)
+figure = addpvaluesBetween(figure, emmeans0.2)
+savePlot(figure, "Shimmer") # Display and save plot
+
+# Speech features: HNR ######
+formula <- 'HNRdBACF_sma3nz_amean ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
+
+dataModel = allData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+
+# Model Selection
+modelNames = c(d0.1,d0.2,d0.3)
+tabel <- cbind(AIC(d0.1), AIC(d0.2), AIC(d0.3))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+
+# Anova(chosenModel[[1]], type = 'III')
+Anova(d0.1, type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+
+figure = behaviorplot(emm0.1, fileNum, taskType, "Harmonics-to-Noise Ratio") # Create plot
+figure = addpvalues(figure, emmeans0.1)
+figure = addpvaluesBetween(figure, emmeans0.2)
+savePlot(figure, "HNR") # Display and save plot
+
+# Speech features: mean seg length ######
+formula <- 'MeanVoicedSegmentLengthSec ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
+
+dataModel = allData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+
+# Model Selection
+modelNames = c(d0.1,d0.2,d0.3)
+tabel <- cbind(AIC(d0.1), AIC(d0.2), AIC(d0.3))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+
+Anova(chosenModel[[1]], type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+
+figure = behaviorplot(emm0.1, fileNum, taskType, "Mean Voiced Segment Length") # Create plot
+figure = addpvalues(figure, emmeans0.1)
+figure = addpvaluesBetween(figure, emmeans0.2)
+savePlot(figure, "MeanSegLength") # Display and save plot
+
+# Speech features: voiced segs per sec ######
+formula <- 'VoicedSegmentsPerSec ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
+
+dataModel = allData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+
+# Model Selection
+modelNames = c(d0.1,d0.2,d0.3)
+tabel <- cbind(AIC(d0.1), AIC(d0.2), AIC(d0.3))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+
+Anova(chosenModel[[1]], type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+
+figure = behaviorplot(emm0.1, fileNum, taskType, "Speech rate") # Create plot
+figure = addpvalues(figure, emmeans0.1)
+figure = addpvaluesBetween(figure, emmeans0.2)
+savePlot(figure, "VoicedSegmensPerSec") # Display and save plot
+
+####### Behavioral data #######
+# Behavioral: NA ######
+formula <- 'VAS_NA ~ fileNum * taskType + (1|participantNum)' # Declare formula
+
+dataModel = allData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+# d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+# d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+
+# Model Selection
+modelNames = c(d0.1)
+tabel <- cbind(AIC(d0.1))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+
+Anova(chosenModel[[1]], type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+
+figure = behaviorplot(emm0.1, fileNum, taskType, "Negative Affect") # Create plot
+figure = addpvalues(figure, emmeans0.1)
+figure = addpvaluesBetween(figure, emmeans0.2)
+savePlot(figure, "NegativeAffect") # Display and save plot
+
+# Behavioral: PAA ######
+formula <- 'VAS_PAA ~ fileNum * taskType + (1|participantNum)' # Declare formula
+
+dataModel = allData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+# d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+# d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+
+# Model Selection
+modelNames = c(d0.1)
+tabel <- cbind(AIC(d0.1))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+
+Anova(chosenModel[[1]], type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+
+figure = behaviorplot(emm0.1, fileNum, taskType, "Postive Activating Affect") # Create plot
+figure = addpvalues(figure, emmeans0.1)
+figure = addpvaluesBetween(figure, emmeans0.2)
+savePlot(figure, "PostiveActivatingAffect") # Display and save plot
+
+# Behavioral: PSA ######
+formula <- 'VAS_PSA ~ fileNum * taskType + (1|participantNum)' # Declare formula
+
+dataModel = allData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+# d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+# d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+
+# Model Selection
+modelNames = c(d0.1)
+tabel <- cbind(AIC(d0.1))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+
+Anova(chosenModel[[1]], type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+
+figure = behaviorplot(emm0.1, fileNum, taskType, "Positive Soothing Affect") # Create plot
+figure = addpvalues(figure, emmeans0.1)
+figure = addpvaluesBetween(figure, emmeans0.2)
+savePlot(figure, "PositiveSoothingAffect") # Display and save plot
+
+# Behavioral: Stress ######
+formula <- 'VAS_Stress ~ fileNum * taskType + (1|participantNum)' # Declare formula
+
+dataModel = allData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+# d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+# d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+
+# Model Selection
+modelNames = c(d0.1)
+tabel <- cbind(AIC(d0.1))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+
+Anova(chosenModel[[1]], type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+
+figure = behaviorplot(emm0.1, fileNum, taskType, "Stress") # Create plot
+figure = addpvalues(figure, emmeans0.1)
+figure = addpvaluesBetween(figure, emmeans0.2)
+savePlot(figure, "Stress") # Display and save plot
+
+####### Physiological data #######
+# Physiological: HRV - RMSSD ######
+formula <- 'rmssd ~ fileNum * taskType + (1|participantNum)' # Declare formula
+
+dataModel = allData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+
+# Model Selection
+modelNames = c(d0.1, d0.2)
+tabel <- cbind(AIC(d0.1), AIC(d0.2))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+
+Anova(chosenModel[[1]], type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+plot(effect("taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+
+figure = behaviorplot(emm0.1, fileNum, taskType, "HRV - RMSSD") # Create plot
+figure = addpvalues(figure, emmeans0.1)
+figure = addpvaluesBetween(figure, emmeans0.2)
+savePlot(figure, "HRV_RMSSD") # Display and save plot
+
+#Physiological: SCR - amplitude ######
+formula <- 'scr ~ fileNum * taskType + (1|participantNum)' # Declare formula
+
+dataModel = allData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+
+# Model Selection
+modelNames = c(d0.1, d0.2)
+tabel <- cbind(AIC(d0.1), AIC(d0.2))
+chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+
+Anova(chosenModel[[1]], type = 'III')
+
+plot(effect("fileNum:taskType", chosenModel[[1]]))
+plot(effect("taskType", chosenModel[[1]]))
+
+emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+
+figure = behaviorplot(emm0.1, fileNum, taskType, "SCR - amp") # Create plot
+figure = addpvalues(figure, emmeans0.1)
+figure = addpvaluesBetween(figure, emmeans0.2)
+savePlot(figure, "SCR_amp") # Display and save plot
+
+####################
