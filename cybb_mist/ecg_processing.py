@@ -204,7 +204,7 @@ ecg_pipeline = SeriesPipeline(
             function=compute_ecg_sqi,
             min_threshold=-3,
             max_threshold=3,
-            min_numb_consecutive=11,
+            min_numb_consecutive=41,
             margin_s=1,
             resample_period_s=0.5,
         ),
