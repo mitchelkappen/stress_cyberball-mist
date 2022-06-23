@@ -18,7 +18,7 @@ pyarrow = "^6.0.1"
 pingouin = "^0.5.0"
 ipython = "^8.0.1"
 catboost = "^1.0.5"
-plotly-resampler = "^0.6.4"
+plotly-resampler = "^0.7.2.1"
 neurokit2 = "^0.2.0"
 hrv-analysis = "^1.0.4"
 
