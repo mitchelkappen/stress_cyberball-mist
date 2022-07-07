@@ -37,6 +37,14 @@ audioData <-
 questionData <- as.data.frame(read.csv("../loc_data/QuestionnaireResults.csv")) 
 questionData$participantNum = questionData$Participant.Number # Change name for merge
 
+colnames(questionData)[which(names(questionData) == "DASS.SCORES")] <- "DASS.Depression"
+colnames(questionData)[which(names(questionData) == "X")] <- "DASS.Anxiety"
+colnames(questionData)[which(names(questionData) == "X.1")] <- "DASS.Stress"
+
+colnames(questionData)[which(names(questionData) == "RRS.SCORES")] <- "RRS.SCORE"
+colnames(questionData)[which(names(questionData) == "X.2")] <- "RRS.Reflection"
+colnames(questionData)[which(names(questionData) == "X.3")] <- "RRS.Brooding"
+
 audioData = merge(audioData, questionData, by = "participantNum") # Merge audioData with trait questionnaires
 
 # Behavioral Data
@@ -80,7 +88,15 @@ audioData <- audioData %>% # Factorize relevant variables
             descriptionType = as.factor(descriptionType),
             experimentPhase = as.factor(experimentPhase),
             Sex = as.factor(Sex),
-            paradigm = as.factor(paradigm))
+            Age = as.double(Age),
+            paradigm = as.factor(paradigm),
+            DASS.Depression = as.double(DASS.Depression),
+            DASS.Anxiety = as.double(DASS.Anxiety),
+            DASS.Stress = as.double(DASS.Stress),
+            RRS.SCORE = as.double(RRS.SCORE),
+            RRS.Reflection = as.double(RRS.Reflection),
+            RRS.Brooding = as.double(RRS.Brooding))
+
 audioData$fileNum <- ordered(audioData$fileNum, levels = c('baseline', 'control', 'control rest', 'stress', 'stress rest')) # Factorize (ordered) moment
 levels(audioData$fileNum) <- list("Baseline"  = "baseline", "Control Task" = "control", "Control Rest" = "control rest", "Stress Task" = "stress", "Stress Rest" = "stress rest")
 levels(audioData$taskType) <- list(Cyberball = "cybb", MIST = "mist")
@@ -101,7 +117,8 @@ physiologicalData$fileNum[physiologicalData$trigger == "Start cyberball control"
 physiologicalData$fileNum[physiologicalData$trigger == "Start cyberball stress"] = "Stress Task"
 
 physiologicalData <- physiologicalData[c("participantNum", "taskType", "fileNum", "duration_s", "rmssd", "sdnn",
-                                         "mean_hr", "max_hr", "min_hr", "std_hr", "lf", "hf", "lf_hf_ratio", "total_power")]
+                                         "mean_hr", "max_hr", "min_hr", "std_hr", "lf", "hf", "lf_hf_ratio", "total_power",
+                                         "SCRR", "phasic_area", "tonic_mean", "phasic_area_normalized", "mean_EDA_SQI")]
 
 physiologicalData = filter(physiologicalData, fileNum == "Control Task" | fileNum == "Stress Task")
 
