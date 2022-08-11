@@ -26,7 +26,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) #Set WD to script lo
 source("functions.R") # Load document where functions are stored
 
 nAGQ = 1
-plotPrefix <- "../figures/"
+plotPrefix <- "../figures/poster/"
 
 ##### Loading data ##### 
 # Audio Data
@@ -133,6 +133,19 @@ allData = merge(audioData, physiologicalData, by = c("participantNum","taskType"
 
 summary(allData)
 
+####### Descriptives #######
+descriptives_df <- audioData[match(unique(audioData$participantNum), audioData$participantNum),]
+n = length(unique(audioData$participantNum))
+m_age = mean(descriptives_df$Age)
+female = sum(descriptives_df$Sex == "Vrouw")
+
+####### Conference Plots ######
+yarrr::pirateplot(formula = F0semitoneFrom27.5Hz_sma3nz_amean ~ fileNum * taskType, # dv is weight, iv is Diet
+                  data = datatemp,
+                  main = "Pirateplot of chicken weights",
+                  xlab = "Diet",
+                  ylab = "Weight")
+
 ####### Speech features #######
 # Speech features: F0 ######
 formula <- 'F0semitoneFrom27.5Hz_sma3nz_amean ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
@@ -160,9 +173,12 @@ emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
+source("functions.R") # Load document where functions are stored
 figure = behaviorplot(emm0.1, fileNum, taskType, "F0 (Pitch)") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
+figure
+
 savePlot(figure, "F0") # Display and save plot
 
 # Speech features: Jitter ######

@@ -31,16 +31,17 @@ plot_theme_apa <-
   }
 
 # Behaviorplot specific stuff
-pd <- position_dodge(0.02) # To prevent errorbars overlapping, use position_dodge to move them horizontally - move them .05 to the left and right
+pd <- position_dodge(0.1) # To prevent errorbars overlapping, use position_dodge to move them horizontally - move them .05 to the left and right
 xplotPosition = 7.1 # set variable for right x location in plot
 cbPalette <- c("#56B4E9", "#E69F00") # Set plot colors to colorblind friendly
 
 behaviorplot <- 
   function(emmeanDataframe, fileNum, taskType, ylabel){
     ggplot(emmeanDataframe, aes(x=fileNum, y=emmean, color=taskType)) +
-    geom_point(size = 3) + 
-    geom_line(aes(linetype = taskType, group = taskType),size = 1)+
-    geom_errorbar(width=.125, aes(ymin=emmean-SE, ymax=emmean+SE), position=pd)+
+    geom_point(size = 6) + # was 3
+    geom_line(aes(linetype = taskType, group = taskType),size = 2)+
+    # geom_errorbar(width=.125, aes(ymin=emmean-SE, ymax=emmean+SE), position=pd)+ # Original
+    geom_errorbar(width=.25, aes(ymin=emmean-SE, ymax=emmean+SE), position=pd, size = 2)+
     # geom_hline(yintercept=0, linetype="dashed")+
     scale_colour_manual(values=cbPalette)+
     scale_linetype_manual(values=c("dashed", "solid")) +
@@ -48,11 +49,13 @@ behaviorplot <-
     theme(legend.position="bottom")+
     theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())+ 
     labs(y = ylabel, x = "Phase")+
-    theme(axis.text.x = element_text(size = 16))+ # X Axis ticks
+    # theme(axis.text.x = element_text(size = 16))+ # X Axis ticks
+    theme(axis.text.x = element_text(size = 36))+ # X Axis ticks
     theme(axis.text.y = element_text(size = 10))+ # Y axis ticks
-    theme(axis.title = element_text(size = 16))+ # Axis titles
-    theme(legend.text = element_text(size = 16))+ # Legend text
-    theme(legend.title = element_text(size = 14))+ # Legend title
+    # theme(axis.title = element_text(size = 16))+ # Axis titles
+    theme(axis.title = element_text(size = 26))+ # Axis titles
+    # theme(legend.text = element_text(size = 16))+ # Legend text
+    # theme(legend.title = element_text(size = 14))+ # Legend title
     plot_theme_apa()+
     # scale_x_discrete(labels=c("-3", "-2(r)", "-1", "0", "1", "2", "3", "4", "5", "6", "7", "8"))+
     theme(
@@ -60,9 +63,10 @@ behaviorplot <-
       axis.text.y=element_text(size=rel(2)),
       axis.title.y=element_text(size=rel(1)),
       axis.title.x = element_text(size=rel(1)),
+      # plot.background = element_rect(fill = "#44475a"),
       # legend.position = "bottom",
-      legend.position = c(.8,.85),
-      legend.title = element_blank()
+      # legend.position = c(.8,.85),
+      # legend.title = element_blank()
     )
   }
 
@@ -171,7 +175,8 @@ addpvaluesBetween <-
   }
 
 savePlot <- function(plotName, filename) {
-  ggsave(file=paste0(plotPrefix, filename, ".jpeg"), width = 4000, height = 2800, dpi = 300, units = "px") # Save plot
+  # ggsave(file=paste0(plotPrefix, filename, ".jpeg"), width = 4000, height = 2800, dpi = 300, units = "px") # Save plot # Original for paper
+  ggsave(file=paste0(plotPrefix, filename, ".jpeg"), width = 2800, height = 4000, dpi = 300, units = "px") # Save plot # For poster
   print(plotName)
 }
 
