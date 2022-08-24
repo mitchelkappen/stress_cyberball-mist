@@ -15,18 +15,20 @@ library(car)
 library(emmeans)
 library(ggplot2)
 library(dplyr)
+library(effects)
 
 ##### Set environment #####
 rm(list = ls()) # Clear environment
-cat("\014") # Clear console
+cat("\014") # Clear console # # Or ctrl + l in VSCode
 dev.off() # Clear plot window
 
 # Set and Get directories
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) #Set WD to script location
+plotDirectory = "C:/Users/mitch/OneDrive - UGent/UGent/Workshops & Lectures/11_SPR_2022/Poster" # This is super sloppy, but there are errors with relative plotting
 source("functions.R") # Load document where functions are stored
 
 nAGQ = 1
-plotPrefix <- "../figures/poster/"
+plotPrefix <- "/figures/"
 
 ##### Loading data ##### 
 # Audio Data
@@ -116,9 +118,9 @@ physiologicalData$fileNum[physiologicalData$trigger == "Start MIST stress"] = "S
 physiologicalData$fileNum[physiologicalData$trigger == "Start cyberball control"] = "Control Task"
 physiologicalData$fileNum[physiologicalData$trigger == "Start cyberball stress"] = "Stress Task"
 
-physiologicalData <- physiologicalData[c("participantNum", "taskType", "fileNum", "duration_s", "rmssd", "sdnn",
-                                         "mean_hr", "max_hr", "min_hr", "std_hr", "lf", "hf", "lf_hf_ratio", "total_power",
-                                         "SCRR", "phasic_area", "tonic_mean", "phasic_area_normalized", "mean_EDA_SQI")]
+physiologicalData <- physiologicalData[c("participantNum", "taskType", "fileNum", "duration_s", "rmssd", "sdnn", # nolint
+                                         "mean_hr", "max_hr", "min_hr", "std_hr", "lf", "hf", "lf_hf_ratio", "total_power", # nolint
+                                         "SCRR", "phasic_area", "tonic_mean", "phasic_area_normalized", "mean_EDA_SQI")] # nolint
 
 physiologicalData = filter(physiologicalData, fileNum == "Control Task" | fileNum == "Stress Task")
 
@@ -133,19 +135,6 @@ allData = merge(audioData, physiologicalData, by = c("participantNum","taskType"
 
 summary(allData)
 
-####### Descriptives #######
-descriptives_df <- audioData[match(unique(audioData$participantNum), audioData$participantNum),]
-n = length(unique(audioData$participantNum))
-m_age = mean(descriptives_df$Age)
-female = sum(descriptives_df$Sex == "Vrouw")
-
-####### Conference Plots ######
-yarrr::pirateplot(formula = F0semitoneFrom27.5Hz_sma3nz_amean ~ fileNum * taskType, # dv is weight, iv is Diet
-                  data = datatemp,
-                  main = "Pirateplot of chicken weights",
-                  xlab = "Diet",
-                  ylab = "Weight")
-
 ####### Speech features #######
 # Speech features: F0 ######
 formula <- 'F0semitoneFrom27.5Hz_sma3nz_amean ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
@@ -153,7 +142,7 @@ formula <- 'F0semitoneFrom27.5Hz_sma3nz_amean ~ fileNum * taskType + Sex + (1|pa
 datatemp <- audioData[c('F0semitoneFrom27.5Hz_sma3nz_amean', 'fileNum', 'taskType', 'Sex', 'paradigm', 'participantNum')] # Clean dataframe to check with Jens
 
 dataModel = allData # Ensure correct data is taken
-rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
 d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
@@ -173,19 +162,16 @@ emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
-source("functions.R") # Load document where functions are stored
 figure = behaviorplot(emm0.1, fileNum, taskType, "F0 (Pitch)") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
-figure
-
 savePlot(figure, "F0") # Display and save plot
 
 # Speech features: Jitter ######
 formula <- 'jitterLocal_sma3nz_amean ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
-rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
 d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
@@ -206,6 +192,8 @@ emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="none", type 
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
+source("functions.R") # Load document where functions are stored
+
 figure = behaviorplot(emm0.1, fileNum, taskType, "Jitter") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
@@ -215,7 +203,7 @@ savePlot(figure, "Jitter") # Display and save plot
 formula <- 'shimmerLocaldB_sma3nz_amean ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
-rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
 d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
@@ -244,7 +232,7 @@ savePlot(figure, "Shimmer") # Display and save plot
 formula <- 'HNRdBACF_sma3nz_amean ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
-rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
 d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
@@ -274,7 +262,7 @@ savePlot(figure, "HNR") # Display and save plot
 formula <- 'MeanVoicedSegmentLengthSec ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
-rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
 d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
@@ -303,7 +291,7 @@ savePlot(figure, "MeanSegLength") # Display and save plot
 formula <- 'VoicedSegmentsPerSec ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
-rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
 d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
@@ -333,7 +321,7 @@ savePlot(figure, "VoicedSegmensPerSec") # Display and save plot
 formula <- 'VAS_NA ~ fileNum * taskType + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
-rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
 # d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
@@ -362,7 +350,7 @@ savePlot(figure, "NegativeAffect") # Display and save plot
 formula <- 'VAS_PAA ~ fileNum * taskType + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
-rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
 # d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
@@ -391,7 +379,7 @@ savePlot(figure, "PostiveActivatingAffect") # Display and save plot
 formula <- 'VAS_PSA ~ fileNum * taskType + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
-rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
 # d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
@@ -420,7 +408,7 @@ savePlot(figure, "PositiveSoothingAffect") # Display and save plot
 formula <- 'VAS_Stress ~ fileNum * taskType + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
-rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
 # d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
@@ -450,7 +438,7 @@ savePlot(figure, "Stress") # Display and save plot
 formula <- 'rmssd ~ fileNum * taskType + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
-rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
 d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
@@ -480,7 +468,7 @@ savePlot(figure, "HRV_RMSSD") # Display and save plot
 formula <- 'scr ~ fileNum * taskType + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
-rm(d0.1, d0.2, d0.3) # Just to be sure you're not comparing former models for this comparison
+rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
 d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)

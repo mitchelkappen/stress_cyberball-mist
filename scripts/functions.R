@@ -38,8 +38,8 @@ cbPalette <- c("#56B4E9", "#E69F00") # Set plot colors to colorblind friendly
 behaviorplot <- 
   function(emmeanDataframe, fileNum, taskType, ylabel){
     ggplot(emmeanDataframe, aes(x=fileNum, y=emmean, color=taskType)) +
-    geom_point(size = 6) + # was 3
-    geom_line(aes(linetype = taskType, group = taskType),size = 2)+
+    geom_point(size = 6, position = pd) + # was 3
+    geom_line(aes(linetype = taskType, group = taskType),size = 2, position = pd)+
     # geom_errorbar(width=.125, aes(ymin=emmean-SE, ymax=emmean+SE), position=pd)+ # Original
     geom_errorbar(width=.25, aes(ymin=emmean-SE, ymax=emmean+SE), position=pd, size = 2)+
     # geom_hline(yintercept=0, linetype="dashed")+
@@ -50,23 +50,25 @@ behaviorplot <-
     theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())+ 
     labs(y = ylabel, x = "Phase")+
     # theme(axis.text.x = element_text(size = 16))+ # X Axis ticks
-    theme(axis.text.x = element_text(size = 36))+ # X Axis ticks
-    theme(axis.text.y = element_text(size = 10))+ # Y axis ticks
+    theme(axis.text.x = element_text(size = 30))+ # X Axis ticks
+    theme(axis.text.y = element_text(size = 30))+ # Y axis ticks
     # theme(axis.title = element_text(size = 16))+ # Axis titles
-    theme(axis.title = element_text(size = 26))+ # Axis titles
-    # theme(legend.text = element_text(size = 16))+ # Legend text
-    # theme(legend.title = element_text(size = 14))+ # Legend title
+    theme(axis.title = element_text(size = 60))+ # Axis titles
+    theme(legend.text = element_text(size = 16))+ # Legend text
+    theme(legend.title = element_text(size = 14))+ # Legend title
     plot_theme_apa()+
+    scale_x_discrete(expand = c(0,.25))+
     # scale_x_discrete(labels=c("-3", "-2(r)", "-1", "0", "1", "2", "3", "4", "5", "6", "7", "8"))+
     theme(
-      axis.text.x=element_text(size=rel(3)),
+      axis.text.x=element_text(size=rel(5)),
       axis.text.y=element_text(size=rel(2)),
-      axis.title.y=element_text(size=rel(1)),
-      axis.title.x = element_text(size=rel(1)),
+      # axis.title.y=element_text(size=rel(1)),
+      axis.title.y=element_text(size=30),
+      axis.title.x = element_text(size=rel(0)),
       # plot.background = element_rect(fill = "#44475a"),
       # legend.position = "bottom",
       # legend.position = c(.8,.85),
-      # legend.title = element_blank()
+      legend.title = element_blank()
     )
   }
 
@@ -148,11 +150,11 @@ addpvaluesBetween <-
         
         # Add significance to plot and return plot
         if(task == "Control Task"){
-          xloc[i] = 0.8
-          xloc2[i] = xloc[i] + xloc[i] / 20
+          xloc[i] = 0.85
+          xloc2[i] = xloc[i] + 0.05
         }else if(task == "Stress Task"){
-          xloc[i] = 2.2
-          xloc2[i] = xloc[i] - xloc[i] / 20
+          xloc[i] = 2.15
+          xloc2[i] = xloc[i] - 0.05
         }
         
         ystart[i] = means$emmean[index1]
@@ -160,7 +162,7 @@ addpvaluesBetween <-
         
         if(i == 1){
           gplot = gplot + geom_segment( aes(x = xloc2[1], y = ystart[1], xend = xloc2[1], yend = yend[1], linetype = "R fans"), linetype = "solid", colour = "black")
-          gplot = gplot + annotate(geom="text", x = xloc[1], y=emmeanloc, label=significance, color='black', size = 10, hjust = 1) # Add the annotation line to the ggplot
+          gplot = gplot + annotate(geom="text", x = xloc[1]+.02, y=emmeanloc, label=significance, color='black', size = 10, hjust = 1) # Add the annotation line to the ggplot
         }else if(i == 2){
           gplot = gplot + geom_segment( aes(x = xloc2[2], y = ystart[2], xend = xloc2[2], yend = yend[2], linetype = "R fans"), linetype = "solid", colour = "black")
           gplot = gplot + annotate(geom="text", x = xloc[2], y=emmeanloc, label=significance, color='black', size = 10, hjust = 0) # Add the annotation line to the ggplot
@@ -175,8 +177,8 @@ addpvaluesBetween <-
   }
 
 savePlot <- function(plotName, filename) {
-  # ggsave(file=paste0(plotPrefix, filename, ".jpeg"), width = 4000, height = 2800, dpi = 300, units = "px") # Save plot # Original for paper
-  ggsave(file=paste0(plotPrefix, filename, ".jpeg"), width = 2800, height = 4000, dpi = 300, units = "px") # Save plot # For poster
+  # ggsave(file=paste0(plotDirectory, plotPrefix, filename, ".jpeg"), width = 4000, height = 2800, dpi = 300, units = "px") # Save plot # Original for paper
+  ggsave(file=paste0(plotDirectory, plotPrefix, filename, ".jpeg"), width = 2500, height = 1900, dpi = 300, units = "px") # Save plot # For poster
   print(plotName)
 }
 
