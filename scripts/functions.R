@@ -41,13 +41,15 @@ behaviorplot <-
     geom_point(size = 6, position = pd) + # was 3
     geom_line(aes(linetype = taskType, group = taskType),size = 2, position = pd)+
     # geom_errorbar(width=.125, aes(ymin=emmean-SE, ymax=emmean+SE), position=pd)+ # Original
+      
+
     geom_errorbar(width=.25, aes(ymin=emmean-SE, ymax=emmean+SE), position=pd, size = 2)+
     # geom_hline(yintercept=0, linetype="dashed")+
     scale_colour_manual(values=cbPalette)+
     scale_linetype_manual(values=c("dashed", "solid")) +
     theme_bw(base_size = 8)+
     theme(legend.position="bottom")+
-    theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())+ 
+    theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())+
     labs(y = ylabel, x = "Phase")+
     # theme(axis.text.x = element_text(size = 16))+ # X Axis ticks
     theme(axis.text.x = element_text(size = 30))+ # X Axis ticks
@@ -55,20 +57,19 @@ behaviorplot <-
     # theme(axis.title = element_text(size = 16))+ # Axis titles
     theme(axis.title = element_text(size = 60))+ # Axis titles
     theme(legend.text = element_text(size = 16))+ # Legend text
+      
     theme(legend.title = element_text(size = 14))+ # Legend title
     plot_theme_apa()+
     scale_x_discrete(expand = c(0,.25))+
-    # scale_x_discrete(labels=c("-3", "-2(r)", "-1", "0", "1", "2", "3", "4", "5", "6", "7", "8"))+
+    
     theme(
       axis.text.x=element_text(size=rel(5)),
       axis.text.y=element_text(size=rel(2)),
-      # axis.title.y=element_text(size=rel(1)),
       axis.title.y=element_text(size=30),
-      axis.title.x = element_text(size=rel(0)),
-      # plot.background = element_rect(fill = "#44475a"),
-      # legend.position = "bottom",
+      axis.title.x = element_text(size=rel(0.5)),
+      legend.position = "right",
       # legend.position = c(.8,.85),
-      legend.title = element_blank()
+      legend.title = element_blank(),
     )
   }
 

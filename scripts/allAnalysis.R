@@ -24,7 +24,8 @@ dev.off() # Clear plot window
 
 # Set and Get directories
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) #Set WD to script location
-plotDirectory = "C:/Users/mitch/OneDrive - UGent/UGent/Workshops & Lectures/11_SPR_2022/Poster" # This is super sloppy, but there are errors with relative plotting
+# plotDirectory = "C:/Users/mitch/OneDrive - UGent/UGent/Workshops & Lectures/11_SPR_2022/Poster" # This is super sloppy, but there are errors with relative plotting
+plotDirectory = "C:/Users/mitch/OneDrive - UGent/Documents/GitHub/stress_cyberball-mist/figures/withBaselines"
 source("functions.R") # Load document where functions are stored
 
 includeBaseline = 1
@@ -107,9 +108,9 @@ levels(audioData$taskType) <- list(Cyberball = "cybb", MIST = "mist")
 # Create a dataframe omitting all other time moments
 if(includeBaseline == 0){
   audioData = filter(audioData, fileNum == "Control Task" | fileNum == "Stress Task")
-}else if(includeBaseline == 1){
+}else if(includeBaseline > 0){
   audioData = filter(audioData, fileNum == "Baseline" | fileNum == "Control Task" | fileNum == "Stress Task")
-  print('yes')
+  print('Baseline data is included')
 }
 
 # Physiological Data (couldn't do that earlier, because different time moments)
@@ -131,8 +132,9 @@ physiologicalData <- physiologicalData[c("participantNum", "taskType", "fileNum"
 
 if(includeBaseline == 0){
   physiologicalData = filter(physiologicalData, fileNum == "Control Task" | fileNum == "Stress Task")
-}else if(includeBaseline == 1){
+}else if(includeBaseline > 0){
   physiologicalData = filter(physiologicalData, fileNum == "Baseline" | fileNum == "Control Task" | fileNum == "Stress Task")
+  print('Baseline data is included')
 }
 
 #  Present in physiological, but not in rest
@@ -144,6 +146,27 @@ audioData$participantNum[!audioData$participantNum %in% physiologicalData$partic
 # Merge to final dataframe
 allData = merge(audioData, physiologicalData, by = c("participantNum","taskType", "fileNum"))
 
+# Do baseline correct if includeBaseline == 2
+if(includeBaseline == 2){
+  allDataBackup = allData # Backup full dataframe
+  # Compute baseline corrected delta scores
+  allData <- ddply(allData,.(participantNum, taskType),transform,
+                       F0semitoneFrom27.5Hz_sma3nz_amean = F0semitoneFrom27.5Hz_sma3nz_amean - F0semitoneFrom27.5Hz_sma3nz_amean[1],
+                       jitterLocal_sma3nz_amean = jitterLocal_sma3nz_amean - jitterLocal_sma3nz_amean[1],
+                       shimmerLocaldB_sma3nz_amean = shimmerLocaldB_sma3nz_amean - shimmerLocaldB_sma3nz_amean[1],
+                       HNRdBACF_sma3nz_amean = HNRdBACF_sma3nz_amean - HNRdBACF_sma3nz_amean[1],
+                       MeanVoicedSegmentLengthSec = MeanVoicedSegmentLengthSec - MeanVoicedSegmentLengthSec[1],
+                       VoicedSegmentsPerSec = VoicedSegmentsPerSec - VoicedSegmentsPerSec[1],
+                       VAS_NA = VAS_NA - VAS_NA[1],
+                       VAS_PAA = VAS_PAA - VAS_PAA[1],
+                       VAS_PSA = VAS_PSA - VAS_PSA[1],
+                       VAS_Stress = VAS_Stress - VAS_Stress[1],
+                       SCRR = SCRR - SCRR[1], 
+                       rmssd = rmssd - rmssd[1])
+  # Remove baseline rows
+  allData = allData[allData$fileNum != "Baseline", ]
+}
+  
 summary(allData)
 
 ####### Speech features #######
@@ -164,9 +187,13 @@ modelNames = c(d0.1,d0.2,d0.3)
 tabel <- cbind(AIC(d0.1), AIC(d0.2), AIC(d0.3))
 chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
 
-Anova(chosenModel[[1]], type = 'III')
-
-plot(effect("fileNum:taskType", chosenModel[[1]]))
+if(includeBaseline == 2){
+  Anova(d0.1, type = 'III')
+  plot(effect("fileNum:taskType", d0.1))
+}else{
+  Anova(chosenModel[[1]], type = 'III')
+  plot(effect("fileNum:taskType", chosenModel[[1]]))
+}
 
 emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
@@ -196,7 +223,7 @@ chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
 # Anova(chosenModel[[1]], type = 'III')
 Anova(d0.1, type = 'III')
 
-plot(effect("fileNum:taskType", chosenModel[[1]]))
+plot(effect("fileNum:taskType", d0.1))
 
 emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
 emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
@@ -225,9 +252,13 @@ modelNames = c(d0.1,d0.2,d0.3)
 tabel <- cbind(AIC(d0.1), AIC(d0.2), AIC(d0.3))
 chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
 
-Anova(chosenModel[[1]], type = 'III')
-
-plot(effect("fileNum:taskType", chosenModel[[1]]))
+if(includeBaseline == 2){
+  Anova(d0.1, type = 'III')
+  plot(effect("fileNum:taskType", d0.1))
+}else{
+  Anova(chosenModel[[1]], type = 'III')
+  plot(effect("fileNum:taskType", chosenModel[[1]]))
+}
 
 emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
 emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
@@ -430,9 +461,13 @@ modelNames = c(d0.1)
 tabel <- cbind(AIC(d0.1))
 chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
 
-Anova(chosenModel[[1]], type = 'III')
-
-plot(effect("fileNum:taskType", chosenModel[[1]]))
+if(includeBaseline == 2){
+  Anova(d0.1, type = 'III')
+  plot(effect("fileNum:taskType", d0.1))
+}else{
+  Anova(chosenModel[[1]], type = 'III')
+  plot(effect("fileNum:taskType", chosenModel[[1]]))
+}
 
 emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
@@ -475,19 +510,19 @@ figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "HRV_RMSSD") # Display and save plot
 
-#Physiological: SCR - amplitude ######
-formula <- 'scr ~ fileNum * taskType + (1|participantNum)' # Declare formula
+#Physiological: SCRR - response rate ######
+formula <- 'SCRR ~ fileNum * taskType + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
-d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
-d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+# d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
+# d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
 
 # Model Selection
-modelNames = c(d0.1, d0.2)
-tabel <- cbind(AIC(d0.1), AIC(d0.2))
+modelNames = c(d0.1)
+tabel <- cbind(AIC(d0.1))
 chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
 
 Anova(chosenModel[[1]], type = 'III')
@@ -500,9 +535,28 @@ emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
-figure = behaviorplot(emm0.1, fileNum, taskType, "SCR - amp") # Create plot
+figure = behaviorplot(emm0.1, fileNum, taskType, "SCRR") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
-savePlot(figure, "SCR_amp") # Display and save plot
+savePlot(figure, "SCRR") # Display and save plot
 
 ####################
+
+
+library(plyr)
+allDataTest <- ddply(allData,.(participantNum, taskType),transform,
+                     deltaF0 = F0semitoneFrom27.5Hz_sma3nz_amean - F0semitoneFrom27.5Hz_sma3nz_amean[1],
+                     deltaJitter = jitterLocal_sma3nz_amean - jitterLocal_sma3nz_amean[1],
+                     deltaShimmer = shimmerLocaldB_sma3nz_amean - shimmerLocaldB_sma3nz_amean[1],
+                     deltaHNR = HNRdBACF_sma3nz_amean - HNRdBACF_sma3nz_amean[1],
+                     deltaMeanVoiced = MeanVoicedSegmentLengthSec - MeanVoicedSegmentLengthSec[1],
+                     deltaSpeed = VoicedSegmentsPerSec - VoicedSegmentsPerSec[1],
+                     deltaNA = VAS_NA - VAS_NA[1],
+                     deltaPAA = VAS_PAA - VAS_PAA[1],
+                     deltaPSA = VAS_PSA - VAS_PSA[1],
+                     deltaStress = VAS_Stress - VAS_Stress[1],
+                     deltaSCRR = SCRR - SCRR[1], 
+                     deltaRMSSD = rmssd - rmssd[1])
+allDataTest$change2
+smalldataset = allDataTest[,c("participantNum", "taskType", "fileNum")]
+smalldataset = cbind(smalldataset, select(allDataTest,contains("delta")))
