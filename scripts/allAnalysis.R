@@ -27,6 +27,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) #Set WD to script lo
 plotDirectory = "C:/Users/mitch/OneDrive - UGent/UGent/Workshops & Lectures/11_SPR_2022/Poster" # This is super sloppy, but there are errors with relative plotting
 source("functions.R") # Load document where functions are stored
 
+includeBaseline = 1
 nAGQ = 1
 plotPrefix <- "/figures/"
 
@@ -104,7 +105,12 @@ levels(audioData$fileNum) <- list("Baseline"  = "baseline", "Control Task" = "co
 levels(audioData$taskType) <- list(Cyberball = "cybb", MIST = "mist")
 
 # Create a dataframe omitting all other time moments
-audioData = filter(audioData, fileNum == "Control Task" | fileNum == "Stress Task")
+if(includeBaseline == 0){
+  audioData = filter(audioData, fileNum == "Control Task" | fileNum == "Stress Task")
+}else if(includeBaseline == 1){
+  audioData = filter(audioData, fileNum == "Baseline" | fileNum == "Control Task" | fileNum == "Stress Task")
+  print('yes')
+}
 
 # Physiological Data (couldn't do that earlier, because different time moments)
 physiologicalData <- as.data.frame(read_parquet("../loc_data/df_feat_tot.parquet"))
@@ -113,6 +119,7 @@ physiologicalData$taskType[physiologicalData$condition == "cybb"] = "Cyberball"
 
 physiologicalData$participantNum = physiologicalData$patient_id
 
+physiologicalData$fileNum[physiologicalData$trigger == "Start rest baseline (eyes open)"] = "Baseline"
 physiologicalData$fileNum[physiologicalData$trigger == "Start MIST control"] = "Control Task"
 physiologicalData$fileNum[physiologicalData$trigger == "Start MIST stress"] = "Stress Task"
 physiologicalData$fileNum[physiologicalData$trigger == "Start cyberball control"] = "Control Task"
@@ -122,7 +129,11 @@ physiologicalData <- physiologicalData[c("participantNum", "taskType", "fileNum"
                                          "mean_hr", "max_hr", "min_hr", "std_hr", "lf", "hf", "lf_hf_ratio", "total_power", # nolint
                                          "SCRR", "phasic_area", "tonic_mean", "phasic_area_normalized", "mean_EDA_SQI")] # nolint
 
-physiologicalData = filter(physiologicalData, fileNum == "Control Task" | fileNum == "Stress Task")
+if(includeBaseline == 0){
+  physiologicalData = filter(physiologicalData, fileNum == "Control Task" | fileNum == "Stress Task")
+}else if(includeBaseline == 1){
+  physiologicalData = filter(physiologicalData, fileNum == "Baseline" | fileNum == "Control Task" | fileNum == "Stress Task")
+}
 
 #  Present in physiological, but not in rest
 physiologicalData$participantNum[!physiologicalData$participantNum %in% audioData$participantNum]
@@ -246,7 +257,7 @@ chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
 # Anova(chosenModel[[1]], type = 'III')
 Anova(d0.1, type = 'III')
 
-plot(effect("fileNum:taskType", chosenModel[[1]]))
+plot(effect("fileNum:taskType", d0.1))
 
 emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
 emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
