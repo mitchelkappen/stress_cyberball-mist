@@ -24,13 +24,14 @@ dev.off() # Clear plot window
 
 # Set and Get directories
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) #Set WD to script location
-# plotDirectory = "C:/Users/mitch/OneDrive - UGent/UGent/Workshops & Lectures/11_SPR_2022/Poster" # This is super sloppy, but there are errors with relative plotting
-plotDirectory = "C:/Users/mitch/OneDrive - UGent/Documents/GitHub/stress_cyberball-mist/figures/withBaselines"
+plotDirectory = "C:/Users/mitch/OneDrive - UGent/UGent/Documents/GitHub/stress_cyberball-mist/figures/recovery" # This is super sloppy, but there are errors with relative plotting
+# plotDirectory = "C:/Users/mitch/OneDrive - UGent/Documents/GitHub/stress_cyberball-mist/figures/withBaselines"
+plotDirectory = dirname(rstudioapi::getActiveDocumentContext()$path)
 source("functions.R") # Load document where functions are stored
 
-includeBaseline = 1
+includeBaseline = 0
 nAGQ = 1
-plotPrefix <- "/figures/"
+plotPrefix <- "/../figures/"
 
 ##### Loading data ##### 
 # Audio Data
@@ -387,6 +388,7 @@ figure = behaviorplot(emm0.1, fileNum, taskType, "Negative Affect") # Create plo
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "NegativeAffect") # Display and save plot
+figureNA = figure
 
 # Behavioral: PAA ######
 formula <- 'VAS_PAA ~ fileNum * taskType + (1|participantNum)' # Declare formula
@@ -416,6 +418,7 @@ figure = behaviorplot(emm0.1, fileNum, taskType, "Postive Activating Affect") # 
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "PostiveActivatingAffect") # Display and save plot
+figureAA = figure
 
 # Behavioral: PSA ######
 formula <- 'VAS_PSA ~ fileNum * taskType + (1|participantNum)' # Declare formula
@@ -445,6 +448,7 @@ figure = behaviorplot(emm0.1, fileNum, taskType, "Positive Soothing Affect") # C
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "PositiveSoothingAffect") # Display and save plot
+figureSA = figure
 
 # Behavioral: Stress ######
 formula <- 'VAS_Stress ~ fileNum * taskType + (1|participantNum)' # Declare formula
@@ -478,6 +482,15 @@ figure = behaviorplot(emm0.1, fileNum, taskType, "Stress") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "Stress") # Display and save plot
+figureS = figure
+
+# Behavioural: Combine plots #######
+library(ggpubr)
+figure <- ggarrange(figureS, figureNA, figureAA, figureSA,
+                    labels = c("A", "B", "C", "D"),
+                    ncol = 2, nrow = 2,
+                    common.legend = TRUE, legend="bottom")
+figure
 
 ####### Physiological data #######
 # Physiological: HRV - RMSSD ######

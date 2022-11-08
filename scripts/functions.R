@@ -51,11 +51,9 @@ behaviorplot <-
     theme(legend.position="bottom")+
     theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())+
     labs(y = ylabel, x = "Phase")+
-    # theme(axis.text.x = element_text(size = 16))+ # X Axis ticks
-    theme(axis.text.x = element_text(size = 30))+ # X Axis ticks
+    theme(axis.text.x = element_text(size = 16))+ # X Axis ticks
     theme(axis.text.y = element_text(size = 30))+ # Y axis ticks
-    # theme(axis.title = element_text(size = 16))+ # Axis titles
-    theme(axis.title = element_text(size = 60))+ # Axis titles
+    theme(axis.title = element_text(size = 16))+ # Axis titles
     theme(legend.text = element_text(size = 16))+ # Legend text
       
     theme(legend.title = element_text(size = 14))+ # Legend title
@@ -63,10 +61,10 @@ behaviorplot <-
     scale_x_discrete(expand = c(0,.25))+
     
     theme(
-      axis.text.x=element_text(size=rel(5)),
+      axis.text.x=element_text(size=rel(2)),
       axis.text.y=element_text(size=rel(2)),
-      axis.title.y=element_text(size=30),
-      axis.title.x = element_text(size=rel(0.5)),
+      axis.title.y=element_text(size=15), # Title on the side of each plot
+      axis.title.x = element_text(size=rel(0.1)),
       legend.position = "right",
       # legend.position = c(.8,.85),
       legend.title = element_blank(),
@@ -151,23 +149,32 @@ addpvaluesBetween <-
         
         # Add significance to plot and return plot
         if(task == "Control Task"){
-          xloc[i] = 0.85
-          xloc2[i] = xloc[i] + 0.05
+          xloc[i] = 0.85 # xLocation of asterisks
+          xloc2[i] = xloc[i] + 0.05 # xLocation of vertical bar
         }else if(task == "Stress Task"){
-          xloc[i] = 2.15
-          xloc2[i] = xloc[i] - 0.05
+          xloc[i] = 2.15 # xLocation of asterisks
+          xloc2[i] = xloc[i] - 0.05 # xLocation of vertical bar
         }
         
         ystart[i] = means$emmean[index1]
         yend[i] = means$emmean[index2]
         
-        if(i == 1){
-          gplot = gplot + geom_segment( aes(x = xloc2[1], y = ystart[1], xend = xloc2[1], yend = yend[1], linetype = "R fans"), linetype = "solid", colour = "black")
-          gplot = gplot + annotate(geom="text", x = xloc[1]+.02, y=emmeanloc, label=significance, color='black', size = 10, hjust = 1) # Add the annotation line to the ggplot
-        }else if(i == 2){
-          gplot = gplot + geom_segment( aes(x = xloc2[2], y = ystart[2], xend = xloc2[2], yend = yend[2], linetype = "R fans"), linetype = "solid", colour = "black")
-          gplot = gplot + annotate(geom="text", x = xloc[2], y=emmeanloc, label=significance, color='black', size = 10, hjust = 0) # Add the annotation line to the ggplot
+        gplot = gplot + geom_segment( aes(x = xloc2[i], y = ystart[i], xend = xloc2[i], yend = yend[i], linetype = "R fans"), linetype = "solid", colour = "black")
+        if(task == "Control Task"){
+          gplot = gplot + annotate(geom="text", x = xloc[i] + .04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 1) # Add the annotation line to the ggplot
+          
+        }else if(task == "Stress Task"){
+          gplot = gplot + annotate(geom="text", x = xloc[i] - .04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 0) # Add the annotation line to the ggplot
+          
         }
+
+        # if(i == 1){
+        #   gplot = gplot + geom_segment( aes(x = xloc2[1], y = ystart[1], xend = xloc2[1], yend = yend[1], linetype = "R fans"), linetype = "solid", colour = "black")
+        #   gplot = gplot + annotate(geom="text", x = xloc[1]+.04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 1) # Add the annotation line to the ggplot
+        # }else if(i == 2){
+        #   gplot = gplot + geom_segment( aes(x = xloc2[2], y = ystart[2], xend = xloc2[2], yend = yend[2], linetype = "R fans"), linetype = "solid", colour = "black")
+        #   gplot = gplot + annotate(geom="text", x = xloc[2]-.04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 0) # Add the annotation line to the ggplot
+        # }
         
         # figure = figure + geom_segment( aes(x = xloc2[i], y = ystart, xend = xloc2[i], yend = yend, linetype = "R fans"), linetype = "solid", colour = "black")
         # figure = figure + annotate(geom="text", x = xloc[i], y=emmeanloc, label=significance, color='black', size = 10)
