@@ -151,34 +151,43 @@ addpvaluesBetween <-
         if(task == "Control Task"){
           xloc[i] = 0.85 # xLocation of asterisks
           xloc2[i] = xloc[i] + 0.05 # xLocation of vertical bar
+          direction = 1
         }else if(task == "Stress Task"){
           xloc[i] = 2.15 # xLocation of asterisks
           xloc2[i] = xloc[i] - 0.05 # xLocation of vertical bar
+          direction = -1
         }
         
         ystart[i] = means$emmean[index1]
         yend[i] = means$emmean[index2]
         
-        gplot = gplot + geom_segment( aes(x = xloc2[i], y = ystart[i], xend = xloc2[i], yend = yend[i], linetype = "R fans"), linetype = "solid", colour = "black")
-        if(task == "Control Task"){
-          gplot = gplot + annotate(geom="text", x = xloc[i] + .04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 1) # Add the annotation line to the ggplot
-          
-        }else if(task == "Stress Task"){
-          gplot = gplot + annotate(geom="text", x = xloc[i] - .04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 0) # Add the annotation line to the ggplot
-          
-        }
-
-        # if(i == 1){
-        #   gplot = gplot + geom_segment( aes(x = xloc2[1], y = ystart[1], xend = xloc2[1], yend = yend[1], linetype = "R fans"), linetype = "solid", colour = "black")
-        #   gplot = gplot + annotate(geom="text", x = xloc[1]+.04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 1) # Add the annotation line to the ggplot
-        # }else if(i == 2){
-        #   gplot = gplot + geom_segment( aes(x = xloc2[2], y = ystart[2], xend = xloc2[2], yend = yend[2], linetype = "R fans"), linetype = "solid", colour = "black")
-        #   gplot = gplot + annotate(geom="text", x = xloc[2]-.04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 0) # Add the annotation line to the ggplot
+        # gplot = gplot + geom_segment( aes(x = xloc2[i], y = ystart[i], xend = xloc2[i], yend = yend[i], linetype = "R fans"), linetype = "solid", colour = "black")
+        # if(task == "Control Task"){
+        #   gplot = gplot + annotate(geom="text", x = xloc[i] + .04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 1) # Add the annotation line to the ggplot
+        #   gplot = gplot + geom_segment( aes(x = xloc2[i], y = ystart[i], xend = xloc2[i], yend = yend[i], linetype = "R fans"), linetype = "solid", colour = "black")
+        #   
+        # }else if(task == "Stress Task"){
+        #   gplot = gplot + annotate(geom="text", x = xloc[i] - .04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 0) # Add the annotation line to the ggplot
+        #   gplot = gplot + geom_segment( aes(x = xloc2[i], y = ystart[i], xend = xloc2[i], yend = yend[i], linetype = "R fans"), linetype = "solid", colour = "black")
+        #   
         # }
+        
+        xlocmanipulation = 0.04 * direction
+
+        if(i == 1){
+          gplot = gplot + geom_segment( aes(x = xloc2[1], y = ystart[1], xend = xloc2[1], yend = yend[1], linetype = "R fans"), linetype = "solid", colour = "black")
+          gplot = gplot + annotate(geom="text", x = xloc[1] + xlocmanipulation, y=emmeanloc, label=significance, color='black', size = 10, hjust = 1) # Add the annotation line to the ggplot
+        }else if(i == 2){
+          gplot = gplot + geom_segment( aes(x = xloc2[2], y = ystart[2], xend = xloc2[2], yend = yend[2], linetype = "R fans"), linetype = "solid", colour = "black")
+          gplot = gplot + annotate(geom="text", x = xloc[2] + xlocmanipulation, y=emmeanloc, label=significance, color='black', size = 10, hjust = 0) # Add the annotation line to the ggplot
+        }
         
         # figure = figure + geom_segment( aes(x = xloc2[i], y = ystart, xend = xloc2[i], yend = yend, linetype = "R fans"), linetype = "solid", colour = "black")
         # figure = figure + annotate(geom="text", x = xloc[i], y=emmeanloc, label=significance, color='black', size = 10)
       }
+      # if(i==1){
+      #   break
+      # }
       
     }
     return(gplot)
@@ -191,3 +200,100 @@ savePlot <- function(plotName, filename) {
 }
 
 ##############
+
+stateplot <-function(data, emmean_dataframe, var, title){
+  ggplot()+ 
+    geom_flat_violin(data= data, aes(x= fileNum, y= .data[[var]], fill=taskType),position = position_nudge(x =.3, y = 0), adjust = 1.5, alpha = .5, colour = NA)+ # flat violin distribution, .3 points to the right. alpha=.5 so see-through
+    geom_boxplot(data= data, aes(x = fileNum, y=.data[[var]], fill=taskType, shape = taskType, color = taskType), outlier.shape=NA, alpha=.5, width=.3, colour='black')+ #boxplot, see through, no outline, 
+    scale_fill_manual(values = c("#56B4E9", "#E69F00"), #colours used in plot, repressent PMDD, PMS and noPMS
+                      name='', #legend gets no name
+                      labels=c(paste0('Cyberball'), paste0('MIST')))+ #labels names
+    geom_point(data= emmean_dataframe, aes(x = fileNum, y = emmean, fill = taskType, shape = taskType), position= position_dodge(0.3), size=4)+ #points representing the emmeans
+    guides(shape = "none")+ # Remove the geom_point shape legend
+    guides(fill = guide_legend(override.aes = list(shape = c(16,17))))+ # Add correct shapes to legend
+    labs(y=title)+
+    scale_x_discrete(labels=c("Control Task", "Stress Task"))+
+    theme(
+      legend.key.size=unit(1.3, 'cm'), # make keys of legend bigger
+      legend.text=element_text(size=13), # text legend bigger
+      plot.title = element_text(size=rel(2)), # plot title bigger
+      panel.border = element_blank(), # no border panel (APA)
+      panel.background = element_blank(), #white simple background
+      axis.line = element_line(colour = "black"), # axis lines black
+      panel.grid.major.y = element_line( size=.1, color="#dedede" ), #slight grey horizontal lines
+      axis.text.x=element_text(size=rel(2)), #size x axis title
+      axis.text.y=element_text(size=rel(1.3)),
+      axis.title.y=element_text(size=rel(1.5)), #size y axis title
+      axis.title.x = element_blank()) # leave away extra x title (only 'foll' and 'lut')
+}
+
+### Violin plot ####
+"%||%" <- function(a, b) { # This is needed
+  if (!is.null(a)) a else b
+}
+
+geom_flat_violin <-
+  function(mapping = NULL,
+           data = NULL,
+           stat = "ydensity",
+           position = "dodge",
+           trim = TRUE,
+           scale = "area",
+           show.legend = NA,
+           inherit.aes = TRUE,
+           ...) {
+    layer(
+      data = data,
+      mapping = mapping,
+      stat = stat,
+      geom = GeomFlatViolin,
+      position = position,
+      show.legend = show.legend,
+      inherit.aes = inherit.aes,
+      params = list(trim = trim, scale = scale, ...)
+    )
+  }
+
+GeomFlatViolin <- ggproto(
+  "GeomFlatViolin",
+  Geom,
+  setup_data = function(data, params) {
+    data$width <- data$width %||%
+      params$width %||% (resolution(data$x, FALSE) * 0.9)
+    # ymin, ymax, xmin, and xmax define the bounding rectangle for each group
+    data %>%
+      group_by(group) %>%
+      mutate(
+        ymin = min(y),
+        ymax = max(y),
+        xmin = x,
+        xmax = x + width / 2
+      )
+  },
+  draw_group = function(data, panel_scales, coord) {
+    # Find the points for the line to go all the way around
+    data <-
+      transform(data,
+                xminv = x,
+                xmaxv = x + violinwidth * (xmax - x))
+    # Make sure it's sorted properly to draw the outline
+    newdata <-
+      rbind(plyr::arrange(transform(data, x = xminv), y),
+            plyr::arrange(transform(data, x = xmaxv), -y))
+    # Close the polygon: set first and last point the same
+    # Needed for coord_polar and such
+    newdata <- rbind(newdata, newdata[1,])
+    ggplot2:::ggname("geom_flat_violin",
+                     GeomPolygon$draw_panel(newdata, panel_scales, coord))
+  },
+  draw_key = draw_key_polygon,
+  default_aes = aes(
+    weight = 1,
+    colour = "grey20",
+    fill = "white",
+    size = 0.5,
+    alpha = NA,
+    linetype = "solid"
+  ),
+  required_aes = c("x", "y")
+)
