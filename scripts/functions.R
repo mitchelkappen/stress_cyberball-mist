@@ -161,41 +161,24 @@ addpvaluesBetween <-
         ystart[i] = means$emmean[index1]
         yend[i] = means$emmean[index2]
         
-        # gplot = gplot + geom_segment( aes(x = xloc2[i], y = ystart[i], xend = xloc2[i], yend = yend[i], linetype = "R fans"), linetype = "solid", colour = "black")
-        # if(task == "Control Task"){
-        #   gplot = gplot + annotate(geom="text", x = xloc[i] + .04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 1) # Add the annotation line to the ggplot
-        #   gplot = gplot + geom_segment( aes(x = xloc2[i], y = ystart[i], xend = xloc2[i], yend = yend[i], linetype = "R fans"), linetype = "solid", colour = "black")
-        #   
-        # }else if(task == "Stress Task"){
-        #   gplot = gplot + annotate(geom="text", x = xloc[i] - .04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 0) # Add the annotation line to the ggplot
-        #   gplot = gplot + geom_segment( aes(x = xloc2[i], y = ystart[i], xend = xloc2[i], yend = yend[i], linetype = "R fans"), linetype = "solid", colour = "black")
-        #   
-        # }
-        
-        xlocmanipulation = 0.04 * direction
+        gplot = gplot + geom_segment( aes(x = xloc2[i], y = ystart[i], xend = xloc2[i], yend = yend[i], linetype = "R fans"), linetype = "solid", colour = "black")
+        if(task == "Control Task"){
+          gplot = gplot + annotate(geom="text", x = xloc[i] + .04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 1) # Add the annotation line to the ggplot
+          gplot = gplot + geom_segment( aes(x = xloc2[i], y = ystart[i], xend = xloc2[i], yend = yend[i], linetype = "R fans"), linetype = "solid", colour = "black")
 
-        if(i == 1){
-          gplot = gplot + geom_segment( aes(x = xloc2[1], y = ystart[1], xend = xloc2[1], yend = yend[1], linetype = "R fans"), linetype = "solid", colour = "black")
-          gplot = gplot + annotate(geom="text", x = xloc[1] + xlocmanipulation, y=emmeanloc, label=significance, color='black', size = 10, hjust = 1) # Add the annotation line to the ggplot
-        }else if(i == 2){
-          gplot = gplot + geom_segment( aes(x = xloc2[2], y = ystart[2], xend = xloc2[2], yend = yend[2], linetype = "R fans"), linetype = "solid", colour = "black")
-          gplot = gplot + annotate(geom="text", x = xloc[2] + xlocmanipulation, y=emmeanloc, label=significance, color='black', size = 10, hjust = 0) # Add the annotation line to the ggplot
+        }else if(task == "Stress Task"){
+          gplot = gplot + annotate(geom="text", x = xloc[i] - .04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 0) # Add the annotation line to the ggplot
+          gplot = gplot + geom_segment( aes(x = xloc2[i], y = ystart[i], xend = xloc2[i], yend = yend[i], linetype = "R fans"), linetype = "solid", colour = "black")
+
         }
-        
-        # figure = figure + geom_segment( aes(x = xloc2[i], y = ystart, xend = xloc2[i], yend = yend, linetype = "R fans"), linetype = "solid", colour = "black")
-        # figure = figure + annotate(geom="text", x = xloc[i], y=emmeanloc, label=significance, color='black', size = 10)
       }
-      # if(i==1){
-      #   break
-      # }
-      
     }
     return(gplot)
   }
 
-savePlot <- function(plotName, filename) {
+savePlot <- function(plotName, filename, widthval = 2500, heightval = 1900) {
   # ggsave(file=paste0(plotDirectory, plotPrefix, filename, ".jpeg"), width = 4000, height = 2800, dpi = 300, units = "px") # Save plot # Original for paper
-  ggsave(file=paste0(plotDirectory, plotPrefix, filename, ".jpeg"), width = 2500, height = 1900, dpi = 300, units = "px") # Save plot # For poster
+  ggsave(file=paste0(plotDirectory, plotPrefix, filename, ".jpeg"), width = widthval, height = heightval, dpi = 300, units = "px") # Save plot # For poster
   print(plotName)
 }
 

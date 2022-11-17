@@ -491,7 +491,7 @@ figure <- ggarrange(figureS, figureNA, figureAA, figureSA,
                     labels = c("A", "B", "C", "D"),
                     ncol = 2, nrow = 2,
                     common.legend = TRUE, legend="bottom")
-figure
+savePlot(figure, "CombinedSelfReports", widthval = 5000, heightval = 3800) # Display and save plot
 
 ####### Physiological data #######
 # Physiological: HRV - RMSSD ######
