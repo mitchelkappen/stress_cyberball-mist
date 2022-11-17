@@ -421,23 +421,6 @@ figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "PostiveActivatingAffect") # Display and save plot
 figureAA = figure
 
-# Try violin plots
-max_y<-max(allData$VAS_PAA)
-plot <- stateplot(allData, summary(emmeans0.2)$emmeans, 'VAS_PAA', 'PAA')+
-  # Control
-    # geom_segment(aes(x =1, y = max_y+max_y/50, xend = 1.1, yend = max_y+max_y/50), size= 1)+ # bottom second line
-    # annotate('text', x=1.05, y=max_y + max_y/100+max_y/50, label='**', size=7)+
-    # geom_segment(aes(x =0.9, y = max_y+max_y/15, xend = 1.1, yend = max_y+max_y/15), size= 1)+ # top line
-    # annotate('text', x=1, y=max_y+max_y/15+max_y/100, label='***', size=7)+
-  # Stress
-    geom_segment(aes(x =1.9, y = max_y+max_y/50, xend = 2.1, yend = max_y+max_y/50), size= 1)+ # bottom second line 
-    annotate('text', x=2, y=max_y + max_y/100+max_y/50, label='***', size=7)+
-  # Within
-    geom_segment(aes(x =0.9, y = max_y+max_y/15, xend = 1.9, yend = max_y+max_y/15), size= 1, colour = "#56B4E9")+ # top line
-    annotate('text', x=1.5, y=max_y+max_y/15+max_y/100, label='***', size=7, colour = "#56B4E9")
-savePlot(plot, "PostiveActivatingAffect_violin") # Display and save plot
-
-
 # Behavioral: PSA ######
 formula <- 'VAS_PSA ~ fileNum * taskType + (1|participantNum)' # Declare formula
 
