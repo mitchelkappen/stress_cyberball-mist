@@ -16,6 +16,7 @@ library(emmeans)
 library(ggplot2)
 library(dplyr)
 library(effects)
+library(ggpubr)
 
 ##### Set environment #####
 rm(list = ls()) # Clear environment
@@ -206,6 +207,7 @@ figure = behaviorplot(emm0.1, fileNum, taskType, "F0 (Pitch)") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "F0") # Display and save plot
+figureF0 = figure
 
 # Speech features: Jitter ######
 formula <- 'jitterLocal_sma3nz_amean ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
@@ -238,6 +240,7 @@ figure = behaviorplot(emm0.1, fileNum, taskType, "Jitter") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "Jitter") # Display and save plot
+figureJIT = figure
 
 # Speech features: Shimmer ######
 formula <- 'shimmerLocaldB_sma3nz_amean ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
@@ -271,6 +274,7 @@ figure = behaviorplot(emm0.1, fileNum, taskType, "Shimmer") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "Shimmer") # Display and save plot
+figureSHIM = figure
 
 # Speech features: HNR ######
 formula <- 'HNRdBACF_sma3nz_amean ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
@@ -301,6 +305,7 @@ figure = behaviorplot(emm0.1, fileNum, taskType, "Harmonics-to-Noise Ratio") # C
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "HNR") # Display and save plot
+figureHNR = figure
 
 # Speech features: mean seg length ######
 formula <- 'MeanVoicedSegmentLengthSec ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
@@ -330,6 +335,7 @@ figure = behaviorplot(emm0.1, fileNum, taskType, "Mean Voiced Segment Length") #
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "MeanSegLength") # Display and save plot
+figureSEG = figure
 
 # Speech features: voiced segs per sec ######
 formula <- 'VoicedSegmentsPerSec ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
@@ -359,6 +365,14 @@ figure = behaviorplot(emm0.1, fileNum, taskType, "Speech rate") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "VoicedSegmensPerSec") # Display and save plot
+figureSPC = figure
+
+# Speech features: Combine plots #######
+figure <- ggarrange(figureF0, figureJIT, figureSHIM, figureHNR, figureSEG, figureSPC,
+                    labels = c("A", "B", "C", "D", "E", "F"),
+                    ncol = 2, nrow = 3,
+                    common.legend = TRUE, legend="bottom")
+savePlot(figure, "CombinedSpeech", widthval = 5000, heightval = 5700) # Display and save plot
 
 ####### Behavioral data #######
 # Behavioral: NA ######
@@ -486,7 +500,6 @@ savePlot(figure, "Stress") # Display and save plot
 figureS = figure
 
 # Behavioural: Combine plots #######
-library(ggpubr)
 figure <- ggarrange(figureS, figureNA, figureAA, figureSA,
                     labels = c("A", "B", "C", "D"),
                     ncol = 2, nrow = 2,
@@ -523,8 +536,9 @@ figure = behaviorplot(emm0.1, fileNum, taskType, "HRV - RMSSD") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "HRV_RMSSD") # Display and save plot
+figureHRV = figure
 
-#Physiological: SCRR - response rate ######
+# Physiological: SCRR - response rate ######
 formula <- 'SCRR ~ fileNum * taskType + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
@@ -553,6 +567,14 @@ figure = behaviorplot(emm0.1, fileNum, taskType, "SCRR") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "SCRR") # Display and save plot
+figureSCRR = figure
+
+# Physiological: Combine plots #######
+figure <- ggarrange(figureSCRR, figureHRV,
+                    labels = c("A", "B"),
+                    ncol = 2, nrow = 1,
+                    common.legend = TRUE, legend="bottom")
+savePlot(figure, "CombinedPhysiologically", widthval = 5000, heightval = 1900) # Display and save plot
 
 ####################
 
@@ -574,3 +596,9 @@ allDataTest <- ddply(allData,.(participantNum, taskType),transform,
 allDataTest$change2
 smalldataset = allDataTest[,c("participantNum", "taskType", "fileNum")]
 smalldataset = cbind(smalldataset, select(allDataTest,contains("delta")))
+
+# Audio Sample descriptives #######
+t.first <- allData[match(unique(allData$participantNum), allData$participantNum),] # Create dataframe with one line per unique participant 
+sprintf("Number of participants: %.f", nrow(t.first))
+sprintf("Number of Men: %.f. Number of Women: %.f.", sum(t.first$Sex == 'Man') , sum(t.first$Sex == 'Vrouw')) 
+sprintf("Age, Mean: %.2f, SD: %.2f.", mean(t.first$Age) , sd(t.first$Age))
