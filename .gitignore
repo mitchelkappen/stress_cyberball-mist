@@ -1,4 +1,4 @@
-
+transcripts/*
 *.xlsx
 *.csv
 *.parquet
