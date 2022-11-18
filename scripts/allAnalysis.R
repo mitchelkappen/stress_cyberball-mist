@@ -29,8 +29,9 @@ plotDirectory = "C:/Users/mitch/OneDrive - UGent/UGent/Documents/GitHub/stress_c
 # plotDirectory = "C:/Users/mitch/OneDrive - UGent/Documents/GitHub/stress_cyberball-mist/figures/withBaselines"
 plotDirectory = dirname(rstudioapi::getActiveDocumentContext()$path)
 source("functions.R") # Load document where functions are stored
+options(contrasts = c("contr.sum","contr.poly")) #use this for the p value of the t test
 
-includeBaseline = 0
+includeBaseline = 0 # 0 if not included, 2 if it should be included
 nAGQ = 1
 plotPrefix <- "/../figures/"
 
@@ -176,8 +177,6 @@ summary(allData)
 # Speech features: F0 ######
 formula <- 'F0semitoneFrom27.5Hz_sma3nz_amean ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
 
-datatemp <- audioData[c('F0semitoneFrom27.5Hz_sma3nz_amean', 'fileNum', 'taskType', 'Sex', 'paradigm', 'participantNum')] # Clean dataframe to check with Jens
-
 dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
@@ -210,7 +209,7 @@ savePlot(figure, "F0") # Display and save plot
 figureF0 = figure
 
 # Speech features: Jitter ######
-formula <- 'jitterLocal_sma3nz_amean ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
+formula <- 'jitterLocal_sma3nz_amean ~ fileNum * taskType + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
@@ -338,7 +337,7 @@ savePlot(figure, "MeanSegLength") # Display and save plot
 figureSEG = figure
 
 # Speech features: voiced segs per sec ######
-formula <- 'VoicedSegmentsPerSec ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
+formula <- 'VoicedSegmentsPerSec ~ fileNum * taskType + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
@@ -466,7 +465,7 @@ savePlot(figure, "PositiveSoothingAffect") # Display and save plot
 figureSA = figure
 
 # Behavioral: Stress ######
-formula <- 'VAS_Stress ~ fileNum * taskType + (1|participantNum)' # Declare formula
+formula <- 'VAS_Stress ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
 
 dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison

@@ -149,26 +149,29 @@ addpvaluesBetween <-
         
         # Add significance to plot and return plot
         if(task == "Control Task"){
-          xloc[i] = 0.85 # xLocation of asterisks
-          xloc2[i] = xloc[i] + 0.05 # xLocation of vertical bar
+          xloc[1] = 0.85 # xLocation of asterisks
+          xloc2[1] = xloc[1] + 0.05 # xLocation of vertical bar
+          ystart[1] = means$emmean[index1]
+          yend[1] = means$emmean[index2]
           direction = 1
         }else if(task == "Stress Task"){
-          xloc[i] = 2.15 # xLocation of asterisks
-          xloc2[i] = xloc[i] - 0.05 # xLocation of vertical bar
+          xloc[2] = 2.15 # xLocation of asterisks
+          xloc2[2] = xloc[2] - 0.05 # xLocation of vertical bar
+          ystart[2] = means$emmean[index1]
+          yend[2] = means$emmean[index2]
           direction = -1
         }
         
-        ystart[i] = means$emmean[index1]
-        yend[i] = means$emmean[index2]
         
-        gplot = gplot + geom_segment( aes(x = xloc2[i], y = ystart[i], xend = xloc2[i], yend = yend[i], linetype = "R fans"), linetype = "solid", colour = "black")
+        
+        # gplot = gplot + geom_segment( aes(x = xloc2[i], y = ystart[i], xend = xloc2[i], yend = yend[i], linetype = "R fans"), linetype = "solid", colour = "black")
         if(task == "Control Task"){
-          gplot = gplot + annotate(geom="text", x = xloc[i] + .04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 1) # Add the annotation line to the ggplot
-          gplot = gplot + geom_segment( aes(x = xloc2[i], y = ystart[i], xend = xloc2[i], yend = yend[i], linetype = "R fans"), linetype = "solid", colour = "black")
+          gplot = gplot + annotate(geom="text", x = xloc[1] + .04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 1) # Add the annotation line to the ggplot
+          gplot = gplot + geom_segment( aes(x = xloc2[1], y = ystart[1], xend = xloc2[1], yend = yend[1], linetype = "R fans"), linetype = "solid", colour = "black")
 
         }else if(task == "Stress Task"){
-          gplot = gplot + annotate(geom="text", x = xloc[i] - .04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 0) # Add the annotation line to the ggplot
-          gplot = gplot + geom_segment( aes(x = xloc2[i], y = ystart[i], xend = xloc2[i], yend = yend[i], linetype = "R fans"), linetype = "solid", colour = "black")
+          gplot = gplot + annotate(geom="text", x = xloc[2] - .04, y=emmeanloc, label=significance, color='black', size = 10, hjust = 0) # Add the annotation line to the ggplot
+          gplot = gplot + geom_segment( aes(x = xloc2[2], y = ystart[2], xend = xloc2[2], yend = yend[2], linetype = "R fans"), linetype = "solid", colour = "black")
 
         }
       }
