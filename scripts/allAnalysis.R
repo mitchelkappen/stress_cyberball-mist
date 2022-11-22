@@ -17,6 +17,7 @@ library(ggplot2)
 library(dplyr)
 library(effects)
 library(ggpubr)
+library(psych) # Cohen.d
 
 ##### Set environment #####
 rm(list = ls()) # Clear environment
@@ -398,6 +399,22 @@ emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
+# Cohen's D
+# Between
+print("Cohen's D for VAS_NA at Control Task | MIST vs Cyb:")
+cohens_d_paradigm_between(allData, 'VAS_NA', 'Control Task', 'MIST', 'Cyberball') #PMS-noPMS
+
+print("Cohen's D for VAS_NA at Stress Task | MIST vs Cyb:")
+cohens_d_paradigm_between(allData, 'VAS_NA', 'Stress Task', 'MIST', 'Cyberball') #PMS-noPMS
+
+# Within
+print("Cohen's D for VAS_NA MIST | Control vs Stress:")
+cohens_d_within_paradigm(allData, 'VAS_NA', 'MIST')
+
+print("Cohen's D for VAS_NA CYB | Control vs Stress:")
+cohens_d_within_paradigm(allData, 'VAS_NA', 'Cyberball')
+
+# Plot
 figure = behaviorplot(emm0.1, fileNum, taskType, "Negative Affect") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
@@ -499,7 +516,7 @@ savePlot(figure, "Stress") # Display and save plot
 figureS = figure
 
 # Behavioural: Combine plots #######
-figure <- ggarrange(figureS, figureNA, figureAA, figureSA,
+figure <- ggarrange(figureNA, figureAA, figureSA, figureS,
                     labels = c("A", "B", "C", "D"),
                     ncol = 2, nrow = 2,
                     common.legend = TRUE, legend="bottom")

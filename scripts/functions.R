@@ -283,3 +283,20 @@ GeomFlatViolin <- ggproto(
   ),
   required_aes = c("x", "y")
 )
+
+#### COHEN'S D ####
+# State - at moment between group
+cohens_d_paradigm_between <- function(dataframe, var, testmoment, group1, group2){
+  temp = dataframe[dataframe$taskType == group1 & dataframe$fileNum == testmoment | dataframe$taskType == group2 & dataframe$fileNum == testmoment ,] # Create a dataframe with only relevant data
+  formula <- as.formula(paste0(var, ' ~ taskType')) # Create formula of interest with as.formula()
+  return(cohen.d(formula, data = temp, alpha=.05))
+}
+
+cohens_d_paradigm_between(allData, 'VAS_NA', 'Control Task', 'MIST', 'Cyberball') #PMS-noPMS
+
+# State - at within paradigm
+cohens_d_within_paradigm <- function(dataframe, var, group, testmoment1 = 'Control Task', testmoment2 = 'Stress Task'){
+  temp = dataframe[dataframe$fileNum == testmoment1 & dataframe$taskType == group | dataframe$fileNum == testmoment2 & dataframe$taskType == group ,] # Create a dataframe with only relevant data
+  formula <- as.formula(paste0(var, ' ~ fileNum')) # Create formula of interest with as.formula()
+  return(cohen.d(formula, data = temp, alpha=.05))
+}
