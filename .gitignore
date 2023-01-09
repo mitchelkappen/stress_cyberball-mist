@@ -4,3 +4,4 @@ transcripts/*
 *.parquet
 *.jpeg
 *.pdf
+loc_data.zip
