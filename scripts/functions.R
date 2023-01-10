@@ -1,6 +1,7 @@
 # Plot functions for:
 #   audioAnalysis.R
 #   hrvAnalysis.R
+#   allAnalysis.R
 
 # One general plotting function
 audio_pretty_plot <-
@@ -292,7 +293,7 @@ cohens_d_paradigm_between <- function(dataframe, var, testmoment, group1, group2
   return(cohen.d(formula, data = temp, alpha=.05))
 }
 
-cohens_d_paradigm_between(allData, 'VAS_NA', 'Control Task', 'MIST', 'Cyberball') #PMS-noPMS
+# cohens_d_paradigm_between(allData, 'VAS_NA', 'Control Task', 'MIST', 'Cyberball') #PMS-noPMS
 
 # State - at within paradigm
 cohens_d_within_paradigm <- function(dataframe, var, group, testmoment1 = 'Control Task', testmoment2 = 'Stress Task'){
