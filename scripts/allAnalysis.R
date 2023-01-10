@@ -190,22 +190,11 @@ d0.1 <- lmer(formula,data=dataModel)
 d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
 d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
 
-# Model Selection
-modelNames = c(d0.1,d0.2,d0.3)
-tabel <- cbind(AIC(d0.1), AIC(d0.2), AIC(d0.3))
-chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
-
-if(includeBaseline == 2){
-  Anova(d0.1, type = 'III')
-  plot(effect("fileNum:taskType", d0.1))
-}else{
-  Anova(chosenModel[[1]], type = 'III')
-  plot(effect("fileNum:taskType", chosenModel[[1]]))
-}
+Anova(d0.1, type = 'III')
+plot(effect("fileNum:taskType", d0.1))
 
 emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
-emmeans1.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
-emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
@@ -214,9 +203,6 @@ figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "F0") # Display and save plot
 figureF0 = figure
-
-eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)) # Calculate effect size
-eff_size(emmeans1.1, sigma=sigma(chosenModel[[1]]), edf=df.residual(chosenModel[[1]])) # Calculate effect size
 
 effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
 # Cohen's D for Forest Plots
@@ -235,15 +221,7 @@ dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
-d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
-d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
 
-# Model Selection
-modelNames = c(d0.1,d0.2,d0.3)
-tabel <- cbind(AIC(d0.1), AIC(d0.2), AIC(d0.3))
-chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
-
-# Anova(chosenModel[[1]], type = 'III')
 Anova(d0.1, type = 'III')
 
 plot(effect("fileNum:taskType", d0.1))
@@ -276,24 +254,12 @@ dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
-d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
-d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
 
-# Model Selection
-modelNames = c(d0.1,d0.2,d0.3)
-tabel <- cbind(AIC(d0.1), AIC(d0.2), AIC(d0.3))
-chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+Anova(d0.1, type = 'III')
+plot(effect("fileNum:taskType", d0.1))
 
-if(includeBaseline == 2){
-  Anova(d0.1, type = 'III')
-  plot(effect("fileNum:taskType", d0.1))
-}else{
-  Anova(chosenModel[[1]], type = 'III')
-  plot(effect("fileNum:taskType", chosenModel[[1]]))
-}
-
-emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
-emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
@@ -320,17 +286,8 @@ dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
-d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
-d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
 
-# Model Selection
-modelNames = c(d0.1,d0.2,d0.3)
-tabel <- cbind(AIC(d0.1))
-chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
-
-# Anova(chosenModel[[1]], type = 'III')
 Anova(d0.1, type = 'III')
-
 plot(effect("fileNum:taskType", d0.1))
 
 emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
@@ -361,20 +318,12 @@ dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
-d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
-d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
 
-# Model Selection
-modelNames = c(d0.1,d0.2,d0.3)
-tabel <- cbind(AIC(d0.1), AIC(d0.2), AIC(d0.3))
-chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+Anova(d0.1, type = 'III')
+plot(effect("fileNum:taskType", d0.1))
 
-Anova(chosenModel[[1]], type = 'III')
-
-plot(effect("fileNum:taskType", chosenModel[[1]]))
-
-emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
-emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
@@ -393,6 +342,7 @@ for(i in 1:length(effSummary$taskType)){
   Upper = effSummary$upper.CL[i]
   forestdf[nrow(forestdf) + 1,] = c(name, effectsize, Lower, Upper, as.character(effSummary$taskType[i]))
 }
+
 # Speech features: voiced segs per sec ######
 formula <- 'VoicedSegmentsPerSec ~ fileNum * taskType + (1|participantNum)' # Declare formula
 
@@ -400,20 +350,12 @@ dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
-d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
-d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
 
-# Model Selection
-modelNames = c(d0.1,d0.2,d0.3)
-tabel <- cbind(AIC(d0.1), AIC(d0.2), AIC(d0.3))
-chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+Anova(d0.1, type = 'III')
+plot(effect("fileNum:taskType", d0.1))
 
-Anova(chosenModel[[1]], type = 'III')
-
-plot(effect("fileNum:taskType", chosenModel[[1]]))
-
-emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
-emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
@@ -448,37 +390,14 @@ dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
-# d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
-# d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
 
-# Model Selection
-modelNames = c(d0.1)
-tabel <- cbind(AIC(d0.1))
-chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+Anova(d0.1, type = 'III')
+plot(effect("fileNum:taskType", d0.1))
 
-Anova(chosenModel[[1]], type = 'III')
-
-plot(effect("fileNum:taskType", chosenModel[[1]]))
-
-emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
-emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
-
-# Cohen's D
-# Between
-print("Cohen's D for VAS_NA at Control Task | MIST vs Cyb:")
-cohens_d_paradigm_between(allData, 'VAS_NA', 'Control Task', 'MIST', 'Cyberball') #PMS-noPMS
-
-print("Cohen's D for VAS_NA at Stress Task | MIST vs Cyb:")
-cohens_d_paradigm_between(allData, 'VAS_NA', 'Stress Task', 'MIST', 'Cyberball') #PMS-noPMS
-
-# Within
-print("Cohen's D for VAS_NA MIST | Control vs Stress:")
-cohens_d_within_paradigm(allData, 'VAS_NA', 'MIST')
-
-print("Cohen's D for VAS_NA CYB | Control vs Stress:")
-cohens_d_within_paradigm(allData, 'VAS_NA', 'Cyberball')
 
 # Plot
 figure = behaviorplot(emm0.1, fileNum, taskType, "Negative Affect") # Create plot
@@ -487,6 +406,16 @@ figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "NegativeAffect") # Display and save plot
 figureNA = figure
 
+effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
+# Cohen's D for Forest Plots
+for(i in 1:length(effSummary$taskType)){
+  name = 'Negative Affect'
+  effectsize = effSummary$effect.size[i]
+  Lower = effSummary$lower.CL[i]
+  Upper = effSummary$upper.CL[i]
+  forestdf[nrow(forestdf) + 1,] = c(name, effectsize, Lower, Upper, as.character(effSummary$taskType[i]))
+}
+
 # Behavioral: PAA ######
 formula <- 'VAS_PAA ~ fileNum * taskType + (1|participantNum)' # Declare formula
 
@@ -494,37 +423,14 @@ dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
-# d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
-# d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
 
-# Model Selection
-modelNames = c(d0.1)
-tabel <- cbind(AIC(d0.1))
-chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+Anova(d0.1, type = 'III')
+plot(effect("fileNum:taskType", d0.1))
 
-Anova(chosenModel[[1]], type = 'III')
-
-plot(effect("fileNum:taskType", chosenModel[[1]]))
-
-emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
-emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
-
-# Cohen's D
-# Between
-print("Cohen's D for VAS_PAA at Control Task | MIST vs Cyb:")
-cohens_d_paradigm_between(allData, 'VAS_PAA', 'Control Task', 'MIST', 'Cyberball') #PMS-noPMS
-
-print("Cohen's D for VAS_PAA at Stress Task | MIST vs Cyb:")
-cohens_d_paradigm_between(allData, 'VAS_PAA', 'Stress Task', 'MIST', 'Cyberball') #PMS-noPMS
-
-# Within
-print("Cohen's D for VAS_PAA MIST | Control vs Stress:")
-cohens_d_within_paradigm(allData, 'VAS_PAA', 'MIST')
-
-print("Cohen's D for VAS_PAA CYB | Control vs Stress:")
-cohens_d_within_paradigm(allData, 'VAS_PAA', 'Cyberball')
 
 # Plot
 figure = behaviorplot(emm0.1, fileNum, taskType, "Postive Activating Affect") # Create plot
@@ -533,6 +439,16 @@ figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "PostiveActivatingAffect") # Display and save plot
 figureAA = figure
 
+effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
+# Cohen's D for Forest Plots
+for(i in 1:length(effSummary$taskType)){
+  name = 'Positive Activating Affect'
+  effectsize = effSummary$effect.size[i]
+  Lower = effSummary$lower.CL[i]
+  Upper = effSummary$upper.CL[i]
+  forestdf[nrow(forestdf) + 1,] = c(name, effectsize, Lower, Upper, as.character(effSummary$taskType[i]))
+}
+
 # Behavioral: PSA ######
 formula <- 'VAS_PSA ~ fileNum * taskType + (1|participantNum)' # Declare formula
 
@@ -540,28 +456,31 @@ dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
-# d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
-# d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
 
-# Model Selection
-modelNames = c(d0.1)
-tabel <- cbind(AIC(d0.1))
-chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+Anova(d0.1, type = 'III')
+plot(effect("fileNum:taskType", d0.1))
 
-Anova(chosenModel[[1]], type = 'III')
-
-plot(effect("fileNum:taskType", chosenModel[[1]]))
-
-emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
-emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
+# Plot
 figure = behaviorplot(emm0.1, fileNum, taskType, "Positive Soothing Affect") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "PositiveSoothingAffect") # Display and save plot
 figureSA = figure
+
+effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
+# Cohen's D for Forest Plots
+for(i in 1:length(effSummary$taskType)){
+  name = 'Positive Soothing Affect'
+  effectsize = effSummary$effect.size[i]
+  Lower = effSummary$lower.CL[i]
+  Upper = effSummary$upper.CL[i]
+  forestdf[nrow(forestdf) + 1,] = c(name, effectsize, Lower, Upper, as.character(effSummary$taskType[i]))
+}
 
 # Behavioral: Stress ######
 formula <- 'VAS_Stress ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
@@ -570,32 +489,31 @@ dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
-# d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
-# d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
 
-# Model Selection
-modelNames = c(d0.1)
-tabel <- cbind(AIC(d0.1))
-chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+Anova(d0.1, type = 'III')
+plot(effect("fileNum:taskType", d0.1))
 
-if(includeBaseline == 2){
-  Anova(d0.1, type = 'III')
-  plot(effect("fileNum:taskType", d0.1))
-}else{
-  Anova(chosenModel[[1]], type = 'III')
-  plot(effect("fileNum:taskType", chosenModel[[1]]))
-}
-
-emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
-emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
+# Plot
 figure = behaviorplot(emm0.1, fileNum, taskType, "Stress") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "Stress") # Display and save plot
 figureS = figure
+
+effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
+# Cohen's D for Forest Plots
+for(i in 1:length(effSummary$taskType)){
+  name = 'Stress'
+  effectsize = effSummary$effect.size[i]
+  Lower = effSummary$lower.CL[i]
+  Upper = effSummary$upper.CL[i]
+  forestdf[nrow(forestdf) + 1,] = c(name, effectsize, Lower, Upper, as.character(effSummary$taskType[i]))
+}
 
 # Behavioural: Combine plots #######
 figure <- ggarrange(figureNA, figureAA, figureSA, figureS,
@@ -612,29 +530,31 @@ dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
-d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
-d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
 
-# Model Selection
-modelNames = c(d0.1, d0.2)
-tabel <- cbind(AIC(d0.1), AIC(d0.2))
-chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
-
-Anova(chosenModel[[1]], type = 'III')
-
+Anova(d0.1, type = 'III')
 plot(effect("fileNum:taskType", chosenModel[[1]]))
-plot(effect("taskType", chosenModel[[1]]))
 
-emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
-emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
+# Plot
 figure = behaviorplot(emm0.1, fileNum, taskType, "HRV - RMSSD") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "HRV_RMSSD") # Display and save plot
 figureHRV = figure
+
+effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
+# Cohen's D for Forest Plots
+for(i in 1:length(effSummary$taskType)){
+  name = 'RMSSD'
+  effectsize = effSummary$effect.size[i]
+  Lower = effSummary$lower.CL[i]
+  Upper = effSummary$upper.CL[i]
+  forestdf[nrow(forestdf) + 1,] = c(name, effectsize, Lower, Upper, as.character(effSummary$taskType[i]))
+}
 
 # Physiological: SCRR - response rate ######
 formula <- 'SCRR ~ fileNum * taskType + (1|participantNum)' # Declare formula
@@ -643,29 +563,32 @@ dataModel = allData # Ensure correct data is taken
 rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
 
 d0.1 <- lmer(formula,data=dataModel)
-# d0.2 <- glmer(formula,data=dataModel, family = Gamma(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
-# d0.3 <- glmer(formula,data=dataModel, family = inverse.gaussian(link = "identity"),glmerControl(optimizer= "bobyqa", optCtrl = list(maxfun = 100000)),nAGQ = nAGQ)
 
-# Model Selection
-modelNames = c(d0.1)
-tabel <- cbind(AIC(d0.1))
-chosenModel = modelNames[which(tabel == min(tabel))] # Get model with lowest AIC
+Anova(d0.1, type = 'III')
 
-Anova(chosenModel[[1]], type = 'III')
+plot(effect("fileNum:taskType", d0.1))
 
-plot(effect("fileNum:taskType", chosenModel[[1]]))
-plot(effect("taskType", chosenModel[[1]]))
-
-emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
-emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
 
+# Plot
 figure = behaviorplot(emm0.1, fileNum, taskType, "SCRR") # Create plot
 figure = addpvalues(figure, emmeans0.1)
 figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "SCRR") # Display and save plot
 figureSCRR = figure
+
+effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
+# Cohen's D for Forest Plots
+for(i in 1:length(effSummary$taskType)){
+  name = 'SCRR'
+  effectsize = effSummary$effect.size[i]
+  Lower = effSummary$lower.CL[i]
+  Upper = effSummary$upper.CL[i]
+  forestdf[nrow(forestdf) + 1,] = c(name, effectsize, Lower, Upper, as.character(effSummary$taskType[i]))
+}
 
 # Physiological: Combine plots #######
 figure <- ggarrange(figureSCRR, figureHRV,
@@ -705,28 +628,45 @@ sprintf("Age, Mean: %.2f, SD: %.2f.", mean(t.first$Age) , sd(t.first$Age))
 # https://stackoverflow.com/questions/58657802/forest-plot-with-subgroups-in-ggplot2
 library('ggplot2') 
 
+# Sort for visual preference
+backup = forestdf
+# forestdf = forestdf[order(forestdf$Group,decreasing=TRUE),]
+
 # you can do the factoring here
-# forestdf$Outcome = factor (forestdf$Outcome, level=Outcome_order)
-forestdf$Outcome = factor(forestdf$Outcome)
-forestdf$D = as.numeric(forestdf$D)
-forestdf$Lower = as.numeric(forestdf$Lower)
-forestdf$Upper = as.numeric(forestdf$Upper)
+forestdf$Outcome = factor(forestdf$Outcome, levels = c("SCRR", "RMSSD",
+                                                       "Negative Affect", "Positive Activating Affect", "Positive Soothing Affect", "Stress",
+                                                       "Jitter", "Shimmer", "Voiced Seg Length", "HNR", "Voiced Seg per Sec.", "F0"
+                                                       ))
+forestdf$effectsize = as.numeric(forestdf$effectsize) * -1
+forestdf$Lower = as.numeric(forestdf$Lower) * -1
+forestdf$Upper = as.numeric(forestdf$Upper) *-1
 
 #define colours for dots and bars
 dotCOLS = c("#a6d8f0","#f9b282")
 barCOLS = c("#008fd5","#de6b35")
+dotCOLS = c("#a6d8f0", "#f9b282", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+barCOLS = cbPalette <- c("#56B4E9", "#E69F00", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
-
-p <- ggplot(forestdf, aes(x=Outcome, y=D, ymin=Lower, ymax=Upper,col=Group,fill=Group)) + 
+dodgevar = 0.5
+p <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Lower, ymax=Upper,col=Group,fill=Group, group=Group)) + 
+  # Draw some background rectangles to indicate different categories
+  geom_rect(aes(xmin = 0.5, xmax = 2.5, ymin = -Inf, ymax = Inf), 
+            fill = "gray93", alpha = 0.2, linetype = "blank") +
+  geom_rect(aes(xmin = 2.5, xmax = 6.5, ymin = -Inf, ymax = Inf),
+            fill = "gray96", alpha = 0.2, linetype = "blank") +
+  geom_rect(aes(xmin = 6.5, xmax = 12.5, ymin = -Inf, ymax = Inf),
+            fill = "gray93", alpha = 0.2, linetype = "blank") +
   #specify position here
-  geom_linerange(size=5,position=position_dodge(width = 0.5)) +
+  geom_linerange(size=8,position=position_dodge(width = dodgevar)) +
   geom_hline(yintercept=0, lty=2) +
   #specify position here too
-  geom_point(size=3, shape=21, colour="white", stroke = 0.5,position=position_dodge(width = 0.5)) +
+  geom_point(size=4, shape=21, colour="white", stroke = 0.5,position=position_dodge(width = dodgevar)) +
+  # facet_wrap(~Group) +
   scale_fill_manual(values=barCOLS)+
   scale_color_manual(values=dotCOLS)+
   scale_x_discrete(name="Speech features effects control vs stress task") +
-  scale_y_continuous(name = "Cohen's D w/ confidence intervals", limits = c(-1, 1)) +
-  coord_flip() +
+  
+  # scale_y_continuous(name = "Cohen's D w/ confidence intervals", limits = c(-1.3, 1.3))
+  coord_flip()+
   theme_minimal()
 p
