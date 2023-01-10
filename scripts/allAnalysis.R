@@ -38,7 +38,7 @@ plotPrefix <- "/../figures/"
 
 # Create empty dataframe for forestplot
 forestdf <- setNames(data.frame(matrix(ncol = 5, nrow = 0)), c("Outcome" = character(0), "D" = numeric(0), "Lower" = numeric(0), "Upper" = numeric(0), "Group" = character(0)))
-forestdf = data.frame(Outcome=character(0), D=numeric(0), Lower=numeric(0), Upper=numeric(0), Group=character(0))
+forestdf = data.frame(Outcome=character(0), effectsize=numeric(0), Lower=numeric(0), Upper=numeric(0), Group=character(0))
 tasks = c("Cyberball", "MIST")
 
 ##### Loading data ##### 
@@ -203,7 +203,8 @@ if(includeBaseline == 2){
   plot(effect("fileNum:taskType", chosenModel[[1]]))
 }
 
-emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+emmeans1.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
@@ -214,13 +215,17 @@ figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "F0") # Display and save plot
 figureF0 = figure
 
+eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)) # Calculate effect size
+eff_size(emmeans1.1, sigma=sigma(chosenModel[[1]]), edf=df.residual(chosenModel[[1]])) # Calculate effect size
+
+effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
 # Cohen's D for Forest Plots
-for(i in 1:length(tasks)){
+for(i in 1:length(effSummary$taskType)){
   name = 'F0'
-  D = cohens_d_within_paradigm(allData, 'F0semitoneFrom27.5Hz_sma3nz_amean', tasks[i])$cohen.d[2]
-  Lower = cohens_d_within_paradigm(allData, 'F0semitoneFrom27.5Hz_sma3nz_amean', tasks[i])$cohen.d[1]
-  Upper = cohens_d_within_paradigm(allData, 'F0semitoneFrom27.5Hz_sma3nz_amean', tasks[i])$cohen.d[3]
-  forestdf[nrow(forestdf) + 1,] = c(name, D, Lower, Upper, tasks[i])
+  effectsize = effSummary$effect.size[i]
+  Lower = effSummary$lower.CL[i]
+  Upper = effSummary$upper.CL[i]
+  forestdf[nrow(forestdf) + 1,] = c(name, effectsize, Lower, Upper, as.character(effSummary$taskType[i]))
 }
 
 # Speech features: Jitter ######
@@ -254,13 +259,14 @@ figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "Jitter") # Display and save plot
 figureJIT = figure
 
+effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
 # Cohen's D for Forest Plots
-for(i in 1:length(tasks)){
+for(i in 1:length(effSummary$taskType)){
   name = 'Jitter'
-  D = cohens_d_within_paradigm(allData, 'jitterLocal_sma3nz_amean', tasks[i])$cohen.d[2]
-  Lower = cohens_d_within_paradigm(allData, 'jitterLocal_sma3nz_amean', tasks[i])$cohen.d[1]
-  Upper = cohens_d_within_paradigm(allData, 'jitterLocal_sma3nz_amean', tasks[i])$cohen.d[3]
-  forestdf[nrow(forestdf) + 1,] = c(name, D, Lower, Upper, tasks[i])
+  effectsize = effSummary$effect.size[i]
+  Lower = effSummary$lower.CL[i]
+  Upper = effSummary$upper.CL[i]
+  forestdf[nrow(forestdf) + 1,] = c(name, effectsize, Lower, Upper, as.character(effSummary$taskType[i]))
 }
 
 # Speech features: Shimmer ######
@@ -297,13 +303,14 @@ figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "Shimmer") # Display and save plot
 figureSHIM = figure
 
+effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
 # Cohen's D for Forest Plots
-for(i in 1:length(tasks)){
+for(i in 1:length(effSummary$taskType)){
   name = 'Shimmer'
-  D = cohens_d_within_paradigm(allData, 'shimmerLocaldB_sma3nz_amean', tasks[i])$cohen.d[2]
-  Lower = cohens_d_within_paradigm(allData, 'shimmerLocaldB_sma3nz_amean', tasks[i])$cohen.d[1]
-  Upper = cohens_d_within_paradigm(allData, 'shimmerLocaldB_sma3nz_amean', tasks[i])$cohen.d[3]
-  forestdf[nrow(forestdf) + 1,] = c(name, D, Lower, Upper, tasks[i])
+  effectsize = effSummary$effect.size[i]
+  Lower = effSummary$lower.CL[i]
+  Upper = effSummary$upper.CL[i]
+  forestdf[nrow(forestdf) + 1,] = c(name, effectsize, Lower, Upper, as.character(effSummary$taskType[i]))
 }
 
 # Speech features: HNR ######
@@ -337,13 +344,14 @@ figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "HNR") # Display and save plot
 figureHNR = figure
 
+effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
 # Cohen's D for Forest Plots
-for(i in 1:length(tasks)){
+for(i in 1:length(effSummary$taskType)){
   name = 'HNR'
-  D = cohens_d_within_paradigm(allData, 'HNRdBACF_sma3nz_amean', tasks[i])$cohen.d[2]
-  Lower = cohens_d_within_paradigm(allData, 'HNRdBACF_sma3nz_amean', tasks[i])$cohen.d[1]
-  Upper = cohens_d_within_paradigm(allData, 'HNRdBACF_sma3nz_amean', tasks[i])$cohen.d[3]
-  forestdf[nrow(forestdf) + 1,] = c(name, D, Lower, Upper, tasks[i])
+  effectsize = effSummary$effect.size[i]
+  Lower = effSummary$lower.CL[i]
+  Upper = effSummary$upper.CL[i]
+  forestdf[nrow(forestdf) + 1,] = c(name, effectsize, Lower, Upper, as.character(effSummary$taskType[i]))
 }
 
 # Speech features: mean seg length ######
@@ -376,15 +384,15 @@ figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "MeanSegLength") # Display and save plot
 figureSEG = figure
 
+effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
 # Cohen's D for Forest Plots
-for(i in 1:length(tasks)){
-  name = 'Voiced Seg length'
-  D = cohens_d_within_paradigm(allData, 'MeanVoicedSegmentLengthSec', tasks[i])$cohen.d[2]
-  Lower = cohens_d_within_paradigm(allData, 'MeanVoicedSegmentLengthSec', tasks[i])$cohen.d[1]
-  Upper = cohens_d_within_paradigm(allData, 'MeanVoicedSegmentLengthSec', tasks[i])$cohen.d[3]
-  forestdf[nrow(forestdf) + 1,] = c(name, D, Lower, Upper, tasks[i])
+for(i in 1:length(effSummary$taskType)){
+  name = 'Voiced Seg Length'
+  effectsize = effSummary$effect.size[i]
+  Lower = effSummary$lower.CL[i]
+  Upper = effSummary$upper.CL[i]
+  forestdf[nrow(forestdf) + 1,] = c(name, effectsize, Lower, Upper, as.character(effSummary$taskType[i]))
 }
-
 # Speech features: voiced segs per sec ######
 formula <- 'VoicedSegmentsPerSec ~ fileNum * taskType + (1|participantNum)' # Declare formula
 
@@ -415,13 +423,14 @@ figure = addpvaluesBetween(figure, emmeans0.2)
 savePlot(figure, "VoicedSegmensPerSec") # Display and save plot
 figureSPC = figure
 
+effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
 # Cohen's D for Forest Plots
-for(i in 1:length(tasks)){
-  name = 'Voiced Seg per sec.'
-  D = cohens_d_within_paradigm(allData, 'VoicedSegmentsPerSec', tasks[i])$cohen.d[2]
-  Lower = cohens_d_within_paradigm(allData, 'VoicedSegmentsPerSec', tasks[i])$cohen.d[1]
-  Upper = cohens_d_within_paradigm(allData, 'VoicedSegmentsPerSec', tasks[i])$cohen.d[3]
-  forestdf[nrow(forestdf) + 1,] = c(name, D, Lower, Upper, tasks[i])
+for(i in 1:length(effSummary$taskType)){
+  name = 'Voiced Seg per Sec.'
+  effectsize = effSummary$effect.size[i]
+  Lower = effSummary$lower.CL[i]
+  Upper = effSummary$upper.CL[i]
+  forestdf[nrow(forestdf) + 1,] = c(name, effectsize, Lower, Upper, as.character(effSummary$taskType[i]))
 }
 
 # Speech features: Combine plots #######
@@ -501,8 +510,6 @@ emmeans0.1 <- emmeans(chosenModel[[1]], pairwise ~ fileNum | taskType, adjust ="
 emmeans0.2 <- emmeans(chosenModel[[1]], pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
-
-eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1))
 
 # Cohen's D
 # Between
