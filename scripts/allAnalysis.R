@@ -633,14 +633,15 @@ backup = forestdf
 # forestdf = forestdf[order(forestdf$Group,decreasing=TRUE),]
 
 # you can do the factoring here
-forestdf$Outcome = factor(forestdf$Outcome, levels = c("SCRR", "RMSSD",
-                                                       "Negative Affect", "Positive Activating Affect", "Positive Soothing Affect", "Stress",
+forestdf$Outcome = factor(forestdf$Outcome, levels = c("RMSSD", "SCRR", 
+                                                       "Positive Activating Affect", "Positive Soothing Affect", "Stress", "Negative Affect", 
                                                        "Jitter", "Shimmer", "Voiced Seg Length", "HNR", "Voiced Seg per Sec.", "F0"
                                                        ))
 forestdf$effectsize = as.numeric(forestdf$effectsize) * -1
 forestdf$Lower = as.numeric(forestdf$Lower) * -1
 forestdf$Upper = as.numeric(forestdf$Upper) *-1
 
+forestdf$interaction <- interaction(forestdf$Outcome, forestdf$Group)
 #define colours for dots and bars
 dotCOLS = c("#a6d8f0","#f9b282")
 barCOLS = c("#008fd5","#de6b35")
@@ -658,9 +659,13 @@ p <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Lower, ymax=Upper,col=Gr
             fill = "gray93", alpha = 0.2, linetype = "blank") +
   #specify position here
   geom_linerange(size=8,position=position_dodge(width = dodgevar)) +
+  # geom_linerange(size=8,position=position_dodge(width = dodgevar), color = ifelse(forestdf$Lower < 0 & forestdf$Upper > 0, "black", "transparent")) +
+  # geom_linerange(size=8,position=position_dodge(width = dodgevar), color = ifelse(forestdf$Lower < 0 & forestdf$Upper < 0, "black", "orange"), border = "black", border_size = 2) +
   geom_hline(yintercept=0, lty=2) +
   #specify position here too
-  geom_point(size=4, shape=21, colour="white", stroke = 0.5,position=position_dodge(width = dodgevar)) +
+  # geom_point(size=4, shape=21, colour="white", stroke = 0.5,position=position_dodge(width = dodgevar)) +
+  geom_point(size=4, shape=21, colour= ifelse(forestdf$Lower < 0 & forestdf$Upper < 0 | forestdf$Lower > 0 & forestdf$Upper > 0, "black", "white"), 
+             stroke = 1.4, position=position_dodge(width = dodgevar)) +
   # facet_wrap(~Group) +
   scale_fill_manual(values=barCOLS)+
   scale_color_manual(values=dotCOLS)+
@@ -670,3 +675,5 @@ p <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Lower, ymax=Upper,col=Gr
   coord_flip()+
   theme_minimal()
 p
+
+
