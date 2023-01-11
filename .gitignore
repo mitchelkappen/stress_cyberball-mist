@@ -4,3 +4,11 @@ transcripts/*
 *.parquet
 *.jpeg
 *.pdf
+
+.vscode
+__pycache__/
+.vad_model/
+.ipynb_checkpoints/
+pretrained_model_checkpoints
+test.wav
+EEGstudy2_idlab_cloud
