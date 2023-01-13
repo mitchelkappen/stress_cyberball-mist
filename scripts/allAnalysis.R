@@ -645,17 +645,25 @@ forestdf$interaction <- interaction(forestdf$Outcome, forestdf$Group)
 #define colours for dots and bars
 dotCOLS = c("#a6d8f0","#f9b282")
 barCOLS = c("#008fd5","#de6b35")
-dotCOLS = c("#a6d8f0", "#f9b282", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-barCOLS = cbPalette <- c("#56B4E9", "#E69F00", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+# dotCOLS = c("#a6d8f0", "#f9b282", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+# barCOLS = cbPalette <- c("#56B4E9", "#E69F00", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+boxlims = c(0.5, 2.5, 6.5, 12.5)
+
+removevars = 1
+if(removevars == 1){
+  backup = forestdf
+  forestdf = forestdf[forestdf$Outcome != "RMSSD" & forestdf$Outcome != "Positive Activating Affect" & forestdf$Outcome != "Positive Soothing Affect", ]
+  boxlims = c(0.5, 1.5, 3.5, 9.5)
+}
 
 dodgevar = 0.5
 p <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Lower, ymax=Upper,col=Group,fill=Group, group=Group)) + 
   # Draw some background rectangles to indicate different categories
-  geom_rect(aes(xmin = 0.5, xmax = 2.5, ymin = -Inf, ymax = Inf), 
+  geom_rect(aes(xmin = boxlims[1], xmax = boxlims[2], ymin = -Inf, ymax = Inf), 
             fill = "gray93", alpha = 0.2, linetype = "blank") +
-  geom_rect(aes(xmin = 2.5, xmax = 6.5, ymin = -Inf, ymax = Inf),
+  geom_rect(aes(xmin = boxlims[2], xmax = boxlims[3], ymin = -Inf, ymax = Inf),
             fill = "gray96", alpha = 0.2, linetype = "blank") +
-  geom_rect(aes(xmin = 6.5, xmax = 12.5, ymin = -Inf, ymax = Inf),
+  geom_rect(aes(xmin = boxlims[3], xmax = boxlims[4], ymin = -Inf, ymax = Inf),
             fill = "gray93", alpha = 0.2, linetype = "blank") +
   #specify position here
   geom_linerange(size=8,position=position_dodge(width = dodgevar)) +
@@ -676,4 +684,6 @@ p <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Lower, ymax=Upper,col=Gr
   theme_minimal()
 p
 
+p + theme_ipsum()
+p + theme_ipsum_es()
 
