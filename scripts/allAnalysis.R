@@ -43,8 +43,8 @@ tasks = c("Cyberball", "MIST")
 
 ##### Loading data ##### 
 # Audio Data
-audioData <-
-  as.data.frame(read_parquet("../loc_data/df_gemaps_func.parquet"))
+audioData <- as.data.frame(read_parquet("../loc_data/df_gemaps_func.parquet"))
+# audioData <- as.data.frame(read_parquet("../loc_data/df_gemaps_func_16khz.parquet"))
 
 # Limesurvey Data
 questionData <- as.data.frame(read.csv("../loc_data/QuestionnaireResults.csv")) 
@@ -657,7 +657,7 @@ if(removevars == 1){
 }
 
 dodgevar = 0.5
-p <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Lower, ymax=Upper,col=Group,fill=Group, group=Group)) + 
+forestplot <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Lower, ymax=Upper,col=Group,fill=Group, group=Group)) + 
   # Draw some background rectangles to indicate different categories
   geom_rect(aes(xmin = boxlims[1], xmax = boxlims[2], ymin = -Inf, ymax = Inf), 
             fill = "gray93", alpha = 0.2, linetype = "blank") +
@@ -679,11 +679,44 @@ p <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Lower, ymax=Upper,col=Gr
   scale_color_manual(values=dotCOLS)+
   scale_x_discrete(name="Speech features effects control vs stress task") +
   
-  # scale_y_continuous(name = "Cohen's D w/ confidence intervals", limits = c(-1.3, 1.3))
+  scale_y_continuous(name = "Cohen's D w/ confidence intervals", limits = c(-1.2, 1.5))+
   coord_flip()+
-  theme_minimal()
-p
+  # theme_minimal()+
+  plot_theme_apa()+
+  theme(legend.position = "right")
 
-p + theme_ipsum()
-p + theme_ipsum_es()
+savePlot(forestplot, "forestPlot", widthval = 2500, heightval = 2500) # Display and save plot
+# p + theme_ipsum()
+# p + theme_ipsum_es()
 
+# Try Out ##############
+# formula <- 'loudnessPeaksPerSec ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
+# 
+# dataModel = allData # Ensure correct data is taken
+# rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
+# 
+# d0.1 <- lmer(formula,data=dataModel)
+# 
+# Anova(d0.1, type = 'III')
+# plot(effect("fileNum:taskType", d0.1))
+# 
+# emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
+# emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
+# emm0.1 <- summary(emmeans0.1)$emmeans
+# emmeans0.1$contrasts
+# 
+# figure = behaviorplot(emm0.1, fileNum, taskType, "Loudness Peaks per Second") # Create plot
+# figure = addpvalues(figure, emmeans0.1)
+# figure = addpvaluesBetween(figure, emmeans0.2)
+# savePlot(figure, "LoudnessPerSec") # Display and save plot
+# figureF0 = figure
+# 
+# effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
+# # Cohen's D for Forest Plots
+# for(i in 1:length(effSummary$taskType)){
+#   name = 'Loudness'
+#   effectsize = effSummary$effect.size[i]
+#   Lower = effSummary$lower.CL[i]
+#   Upper = effSummary$upper.CL[i]
+#   forestdf[nrow(forestdf) + 1,] = c(name, effectsize, Lower, Upper, as.character(effSummary$taskType[i]))
+# }
