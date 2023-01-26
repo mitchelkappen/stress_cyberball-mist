@@ -43,8 +43,8 @@ tasks = c("Cyberball", "MIST")
 
 ##### Loading data ##### 
 # Audio Data
-audioData <- as.data.frame(read_parquet("../loc_data/df_gemaps_func.parquet"))
-# audioData <- as.data.frame(read_parquet("../loc_data/df_gemaps_func_16khz.parquet"))
+# audioData <- as.data.frame(read_parquet("../loc_data/final/df_gemaps_func_noisy.parquet"))
+audioData <- as.data.frame(read_parquet("../loc_data/final/df_gemaps_func_16khz_noisy.parquet"))
 
 # Limesurvey Data
 questionData <- as.data.frame(read.csv("../loc_data/QuestionnaireResults.csv")) 
@@ -197,6 +197,7 @@ emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type =
 emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
+pairs(pairs(emmeans(d0.1, ~ fileNum | taskType)), by = NULL, adjust = "fdr")
 
 figure = behaviorplot(emm0.1, fileNum, taskType, "F0 (Pitch)") # Create plot
 figure = addpvalues(figure, emmeans0.1)
@@ -230,6 +231,7 @@ emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type 
 emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
+pairs(pairs(emmeans(d0.1, ~ fileNum | taskType)), by = NULL, adjust = "fdr")
 
 figure = behaviorplot(emm0.1, fileNum, taskType, "Jitter") # Create plot
 figure = addpvalues(figure, emmeans0.1)
@@ -262,6 +264,7 @@ emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type 
 emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
+pairs(pairs(emmeans(d0.1, ~ fileNum | taskType)), by = NULL, adjust = "fdr")
 
 figure = behaviorplot(emm0.1, fileNum, taskType, "Shimmer") # Create plot
 figure = addpvalues(figure, emmeans0.1)
@@ -294,6 +297,7 @@ emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type 
 emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
+pairs(pairs(emmeans(d0.1, ~ fileNum | taskType)), by = NULL, adjust = "fdr")
 
 figure = behaviorplot(emm0.1, fileNum, taskType, "Harmonics-to-Noise Ratio") # Create plot
 figure = addpvalues(figure, emmeans0.1)
@@ -326,6 +330,7 @@ emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type 
 emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
+pairs(pairs(emmeans(d0.1, ~ fileNum | taskType)), by = NULL, adjust = "fdr")
 
 figure = behaviorplot(emm0.1, fileNum, taskType, "Mean Voiced Segment Length") # Create plot
 figure = addpvalues(figure, emmeans0.1)
@@ -358,6 +363,7 @@ emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type 
 emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
+pairs(pairs(emmeans(d0.1, ~ fileNum | taskType)), by = NULL, adjust = "fdr")
 
 figure = behaviorplot(emm0.1, fileNum, taskType, "Speech rate") # Create plot
 figure = addpvalues(figure, emmeans0.1)
@@ -398,6 +404,7 @@ emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type =
 emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
+pairs(pairs(emmeans(d0.1, ~ fileNum | taskType)), by = NULL, adjust = "fdr")
 
 # Plot
 figure = behaviorplot(emm0.1, fileNum, taskType, "Negative Affect") # Create plot
@@ -431,6 +438,7 @@ emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type =
 emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
+pairs(pairs(emmeans(d0.1, ~ fileNum | taskType)), by = NULL, adjust = "fdr")
 
 # Plot
 figure = behaviorplot(emm0.1, fileNum, taskType, "Postive Activating Affect") # Create plot
@@ -464,6 +472,7 @@ emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type =
 emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
+pairs(pairs(emmeans(d0.1, ~ fileNum | taskType)), by = NULL, adjust = "fdr")
 
 # Plot
 figure = behaviorplot(emm0.1, fileNum, taskType, "Positive Soothing Affect") # Create plot
@@ -497,6 +506,7 @@ emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type =
 emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
+pairs(pairs(emmeans(d0.1, ~ fileNum | taskType)), by = NULL, adjust = "fdr")
 
 # Plot
 figure = behaviorplot(emm0.1, fileNum, taskType, "Stress") # Create plot
@@ -532,12 +542,13 @@ rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure)
 d0.1 <- lmer(formula,data=dataModel)
 
 Anova(d0.1, type = 'III')
-plot(effect("fileNum:taskType", chosenModel[[1]]))
+plot(effect("fileNum:taskType", d0.1))
 
 emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
+pairs(pairs(emmeans(d0.1, ~ fileNum | taskType)), by = NULL, adjust = "fdr")
 
 # Plot
 figure = behaviorplot(emm0.1, fileNum, taskType, "HRV - RMSSD") # Create plot
@@ -565,13 +576,13 @@ rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure)
 d0.1 <- lmer(formula,data=dataModel)
 
 Anova(d0.1, type = 'III')
-
 plot(effect("fileNum:taskType", d0.1))
 
 emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
 emm0.1 <- summary(emmeans0.1)$emmeans
 emmeans0.1$contrasts
+pairs(pairs(emmeans(d0.1, ~ fileNum | taskType)), by = NULL, adjust = "fdr")
 
 # Plot
 figure = behaviorplot(emm0.1, fileNum, taskType, "SCRR") # Create plot
@@ -598,26 +609,6 @@ figure <- ggarrange(figureSCRR, figureHRV,
 savePlot(figure, "CombinedPhysiologically", widthval = 5000, heightval = 1900) # Display and save plot
 
 ####################
-
-
-library(plyr)
-allDataTest <- ddply(allData,.(participantNum, taskType),transform,
-                     deltaF0 = F0semitoneFrom27.5Hz_sma3nz_amean - F0semitoneFrom27.5Hz_sma3nz_amean[1],
-                     deltaJitter = jitterLocal_sma3nz_amean - jitterLocal_sma3nz_amean[1],
-                     deltaShimmer = shimmerLocaldB_sma3nz_amean - shimmerLocaldB_sma3nz_amean[1],
-                     deltaHNR = HNRdBACF_sma3nz_amean - HNRdBACF_sma3nz_amean[1],
-                     deltaMeanVoiced = MeanVoicedSegmentLengthSec - MeanVoicedSegmentLengthSec[1],
-                     deltaSpeed = VoicedSegmentsPerSec - VoicedSegmentsPerSec[1],
-                     deltaNA = VAS_NA - VAS_NA[1],
-                     deltaPAA = VAS_PAA - VAS_PAA[1],
-                     deltaPSA = VAS_PSA - VAS_PSA[1],
-                     deltaStress = VAS_Stress - VAS_Stress[1],
-                     deltaSCRR = SCRR - SCRR[1], 
-                     deltaRMSSD = rmssd - rmssd[1])
-allDataTest$change2
-smalldataset = allDataTest[,c("participantNum", "taskType", "fileNum")]
-smalldataset = cbind(smalldataset, select(allDataTest,contains("delta")))
-
 # Audio Sample descriptives #######
 t.first <- allData[match(unique(allData$participantNum), allData$participantNum),] # Create dataframe with one line per unique participant 
 sprintf("Number of participants: %.f", nrow(t.first))
@@ -633,27 +624,27 @@ backup = forestdf
 # forestdf = forestdf[order(forestdf$Group,decreasing=TRUE),]
 
 # you can do the factoring here
-forestdf$Outcome = factor(forestdf$Outcome, levels = c("RMSSD", "SCRR", 
-                                                       "Positive Activating Affect", "Positive Soothing Affect", "Stress", "Negative Affect", 
-                                                       "Jitter", "Shimmer", "Voiced Seg Length", "HNR", "Voiced Seg per Sec.", "F0"
+forestdf$Outcome = factor(forestdf$Outcome, levels = c("Jitter", "Shimmer", "Voiced Seg Length", "HNR", "Voiced Seg per Sec.", "F0",
+                                                       "Positive Activating Affect", "Positive Soothing Affect", "Stress", "Negative Affect",
+                                                       "RMSSD", "SCRR"
                                                        ))
+# Apply -1 everywhere, because the effectsizes are flipped with the emmeans stuff
 forestdf$effectsize = as.numeric(forestdf$effectsize) * -1
 forestdf$Lower = as.numeric(forestdf$Lower) * -1
 forestdf$Upper = as.numeric(forestdf$Upper) *-1
 
-forestdf$interaction <- interaction(forestdf$Outcome, forestdf$Group)
 #define colours for dots and bars
-dotCOLS = c("#a6d8f0","#f9b282")
+# dotCOLS = c("#a6d8f0","#f9b282") # these are actually the bars
 barCOLS = c("#008fd5","#de6b35")
-# dotCOLS = c("#a6d8f0", "#f9b282", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-# barCOLS = cbPalette <- c("#56B4E9", "#E69F00", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-boxlims = c(0.5, 2.5, 6.5, 12.5)
+dotCOLS = c("#56B4E9", "#E69F00")
+boxlims = c(0.5, 6.5, 10.5, 12.5)
 
 removevars = 1
 if(removevars == 1){
   backup = forestdf
   forestdf = forestdf[forestdf$Outcome != "RMSSD" & forestdf$Outcome != "Positive Activating Affect" & forestdf$Outcome != "Positive Soothing Affect", ]
-  boxlims = c(0.5, 1.5, 3.5, 9.5)
+  # boxlims = c(0.5, 1.5, 3.5, 9.5)
+  boxlims = c(0.5, 6.5, 8.5, 9.5)
 }
 
 dodgevar = 0.5
@@ -667,56 +658,54 @@ forestplot <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Lower, ymax=Upp
             fill = "gray93", alpha = 0.2, linetype = "blank") +
   #specify position here
   geom_linerange(size=8,position=position_dodge(width = dodgevar)) +
-  # geom_linerange(size=8,position=position_dodge(width = dodgevar), color = ifelse(forestdf$Lower < 0 & forestdf$Upper > 0, "black", "transparent")) +
-  # geom_linerange(size=8,position=position_dodge(width = dodgevar), color = ifelse(forestdf$Lower < 0 & forestdf$Upper < 0, "black", "orange"), border = "black", border_size = 2) +
   geom_hline(yintercept=0, lty=2) +
   #specify position here too
-  # geom_point(size=4, shape=21, colour="white", stroke = 0.5,position=position_dodge(width = dodgevar)) +
   geom_point(size=4, shape=21, colour= ifelse(forestdf$Lower < 0 & forestdf$Upper < 0 | forestdf$Lower > 0 & forestdf$Upper > 0, "black", "white"), 
              stroke = 1.4, position=position_dodge(width = dodgevar)) +
-  # facet_wrap(~Group) +
   scale_fill_manual(values=barCOLS)+
   scale_color_manual(values=dotCOLS)+
-  scale_x_discrete(name="Speech features effects control vs stress task") +
+  scale_x_discrete(name="DV") +
   
-  scale_y_continuous(name = "Cohen's D w/ confidence intervals", limits = c(-1.2, 1.5))+
+  scale_y_continuous(name = "Effect Size (95%CI)", limits = c(-1.05, 1.45))+
   coord_flip()+
-  # theme_minimal()+
+  theme_pubr() +
+  plot_theme_apa()+
+  theme(legend.position = "right", legend.text = element_text(size = 18), legend.title = element_text(size = 18))
+
+savePlot(forestplot, "forestPlot", widthval = 2500, heightval = 2500) # Display and save plot
+
+### Alternative Forest plot ########
+o <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Lower, ymax=Upper,col=Group,fill=Group)) + 
+  #specify position here
+  geom_linerange(size=1,position=position_dodge(width = 0.5)) +
+  geom_hline(yintercept=0, lty=3) +
+  #specify position here too
+  geom_point(size=3, shape=21, colour="white", stroke = 0.5,position=position_dodge(width = 0.5)) +
+  scale_fill_manual(values=barCOLS)+
+  scale_color_manual(values=dotCOLS)+
+  scale_x_discrete(name="DV") +
+  scale_y_continuous(name="Effect Size (95%CI)", limits = c(-1.05, 1.45)) +
+  coord_flip() +
+  theme_pubr() +
   plot_theme_apa()+
   theme(legend.position = "right")
 
-savePlot(forestplot, "forestPlot", widthval = 2500, heightval = 2500) # Display and save plot
-# p + theme_ipsum()
-# p + theme_ipsum_es()
+o
 
-# Try Out ##############
-# formula <- 'loudnessPeaksPerSec ~ fileNum * taskType + Sex + (1|participantNum)' # Declare formula
-# 
-# dataModel = allData # Ensure correct data is taken
-# rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
-# 
-# d0.1 <- lmer(formula,data=dataModel)
-# 
-# Anova(d0.1, type = 'III')
-# plot(effect("fileNum:taskType", d0.1))
-# 
-# emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="fdr", type = "response") #we don't adjust because we do this later
-# emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="fdr", type = "response") #we don't adjust because we do this later
-# emm0.1 <- summary(emmeans0.1)$emmeans
-# emmeans0.1$contrasts
-# 
-# figure = behaviorplot(emm0.1, fileNum, taskType, "Loudness Peaks per Second") # Create plot
-# figure = addpvalues(figure, emmeans0.1)
-# figure = addpvaluesBetween(figure, emmeans0.2)
-# savePlot(figure, "LoudnessPerSec") # Display and save plot
-# figureF0 = figure
-# 
-# effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
-# # Cohen's D for Forest Plots
-# for(i in 1:length(effSummary$taskType)){
-#   name = 'Loudness'
-#   effectsize = effSummary$effect.size[i]
-#   Lower = effSummary$lower.CL[i]
-#   Upper = effSummary$upper.CL[i]
-#   forestdf[nrow(forestdf) + 1,] = c(name, effectsize, Lower, Upper, as.character(effSummary$taskType[i]))
-# }
+# Conduct the paired t-test
+t.test(forestdf$effectsize[forestdf$Group == "Cyberball"], forestdf$effectsize[forestdf$Group == "MIST"])
+wilcox.test(forestdf$effectsize[forestdf$Group == "Cyberball"], forestdf$effectsize[forestdf$Group == "MIST"], paired = TRUE)
+
+# Non parametric with absolute values
+wilcox.test(abs(forestdf$effectsize[forestdf$Group == "Cyberball"]), abs(forestdf$effectsize[forestdf$Group == "MIST"]), paired = TRUE)
+
+differences <- abs(forestdf$effectsize[forestdf$Group == "Cyberball"]) - abs(forestdf$effectsize[forestdf$Group == "MIST"])
+
+# Create the Q-Q plot
+qqplot(differences, main = "Q-Q Plot", xlab = "Theoretical Quantiles", ylab = "Sample Quantiles")
+qqline(differences)
+
+allData$F0semitoneFrom27.5Hz_sma3nz_amean[allData$fileNum == 'Stress Task'] - allData$F0semitoneFrom27.5Hz_sma3nz_amean[allData$fileNum == 'Control Task'] 
+
+allData$diff <- ave(allData$F0semitoneFrom27.5Hz_sma3nz_amea, factor(allData$fileNum), FUN=function(x) c(NA,diff(x)))
+
