@@ -681,6 +681,8 @@ forestplot <- forestplot +
   geom_segment(aes(x = boxlims[3]+.05, xend = boxlims[4]-.05, y = 1.35, yend = 1.35), col = "black", arrow = arrow(length = unit(0.4, "cm"), end = "both", type = "closed")) +
   geom_text(aes(x = mean(boxlims[3:4]), y = 1.4, label = "Speech"), col = "black", angle = 270)
 
+# Remove dots in legend
+forestplot <- forestplot + guides(fill = guide_legend(override.aes = list(shape = NA, size = 0)))
 savePlot(forestplot, "forestPlot", widthval = 2600, heightval = 3000) # Display and save plot
 
 ### Alternative Forest plot ########
