@@ -651,11 +651,11 @@ dodgevar = 0.5
 forestplot <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Lower, ymax=Upper,col=Group,fill=Group, group=Group)) + 
   # Draw some background rectangles to indicate different categories
   geom_rect(aes(xmin = boxlims[1], xmax = boxlims[2], ymin = -Inf, ymax = Inf), 
-            fill = "gray93", alpha = 0.2, linetype = "blank") +
+            fill = "gray100", alpha = 0.2, linetype = "blank") +
   geom_rect(aes(xmin = boxlims[2], xmax = boxlims[3], ymin = -Inf, ymax = Inf),
             fill = "gray96", alpha = 0.2, linetype = "blank") +
   geom_rect(aes(xmin = boxlims[3], xmax = boxlims[4], ymin = -Inf, ymax = Inf),
-            fill = "gray93", alpha = 0.2, linetype = "blank") +
+            fill = "gray100", alpha = 0.2, linetype = "blank") +
   #specify position here
   geom_linerange(size=8,position=position_dodge(width = dodgevar)) +
   geom_hline(yintercept=0, lty=2) +
@@ -664,15 +664,24 @@ forestplot <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Lower, ymax=Upp
              stroke = 1.4, position=position_dodge(width = dodgevar)) +
   scale_fill_manual(values=barCOLS)+
   scale_color_manual(values=dotCOLS)+
-  scale_x_discrete(name="DV") +
+  scale_x_discrete(name="") +
   
   scale_y_continuous(name = "Effect Size (95%CI)", limits = c(-1.05, 1.45))+
   coord_flip()+
   theme_pubr() +
   plot_theme_apa()+
-  theme(legend.position = "right", legend.text = element_text(size = 18), legend.title = element_text(size = 18))
+  theme(legend.position = "bottom", legend.text = element_text(size = 18), legend.title = element_text(size = 18))
 
-savePlot(forestplot, "forestPlot", widthval = 2500, heightval = 2500) # Display and save plot
+# Add the categories
+forestplot <- forestplot + 
+  geom_segment(aes(x = boxlims[1]+.05, xend = boxlims[2]-.05, y = 1.35, yend = 1.35), color = "black", arrow = arrow(length = unit(0.4, "cm"), end = "both", type = "closed")) +
+  geom_text(aes(x = mean(boxlims[1:2]), y = 1.4, label = "Physiological"), color = "black", angle = 270) +
+  geom_segment(aes(x = boxlims[2]+.05, xend = boxlims[3]-.05, y = 1.35, yend = 1.35), color = "black", arrow = arrow(length = unit(0.4, "cm"), end = "both", type = "closed")) +
+  geom_text(aes(x = mean(boxlims[2:3]), y = 1.4, label = "Self-reports"), color = "black", angle = 270) +
+  geom_segment(aes(x = boxlims[3]+.05, xend = boxlims[4]-.05, y = 1.35, yend = 1.35), col = "black", arrow = arrow(length = unit(0.4, "cm"), end = "both", type = "closed")) +
+  geom_text(aes(x = mean(boxlims[3:4]), y = 1.4, label = "Speech"), col = "black", angle = 270)
+
+savePlot(forestplot, "forestPlot", widthval = 2600, heightval = 3000) # Display and save plot
 
 ### Alternative Forest plot ########
 o <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Lower, ymax=Upper,col=Group,fill=Group)) + 
