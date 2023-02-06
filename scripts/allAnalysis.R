@@ -587,10 +587,14 @@ forestdf$Outcome = factor(forestdf$Outcome, levels = c("Jitter", "Shimmer", "Voi
                                                        "Stress", "Negative Affect",
                                                        "SCRR"
                                                        ))
-# Apply -1 everywhere, because the effectsizes are flipped with the emmeans stuff
-# forestdf$effectsize = as.numeric(forestdf$effectsize) * -1
-# forestdf$Lower = as.numeric(forestdf$Lower) * -1
-# forestdf$Upper = as.numeric(forestdf$Upper) *-1
+# Make them numeric
+forestdf$effectsize = round(as.numeric(forestdf$effectsize), digits = 2)
+forestdf$Lower = round(as.numeric(forestdf$Lower), digits = 2)
+forestdf$Upper = round(as.numeric(forestdf$Upper), digits = 2)
+forestdf$Beta = round(as.numeric(forestdf$Beta), digits = 3)
+forestdf$SE = round(as.numeric(forestdf$SE), digits = 3)
+forestdf$t = round(as.numeric(forestdf$t), digits = 3)
+
 forestdf$pvalues = collectedPvalues
 
 #define colours for dots and bars
@@ -609,17 +613,19 @@ if(removevars == 1){
 dodgevar = 0.5
 forestplot <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Upper, ymax=Lower,col=Group,fill=Group, group=Group)) + 
   # Draw some background rectangles to indicate different categories
-  # geom_rect(aes(xmin = boxlims[1], xmax = boxlims[2], ymin = -Inf, ymax = Inf), 
-  #           fill = "gray100", alpha = 0.2, linetype = "blank") +
-  # geom_rect(aes(xmin = boxlims[2], xmax = boxlims[3], ymin = -Inf, ymax = Inf),
-  #           fill = "gray96", alpha = 0.2, linetype = "blank") +
-  # geom_rect(aes(xmin = boxlims[3], xmax = boxlims[4], ymin = -Inf, ymax = Inf),
-  #           fill = "gray100", alpha = 0.2, linetype = "blank") +
+  geom_rect(aes(xmin = boxlims[1], xmax = boxlims[2], ymin = -Inf, ymax = Inf),
+            fill = "gray100", alpha = 0.2, linetype = "blank") +
+  geom_rect(aes(xmin = boxlims[2], xmax = boxlims[3], ymin = -Inf, ymax = Inf),
+            fill = "gray96", alpha = 0.2, linetype = "blank") +
+  geom_rect(aes(xmin = boxlims[3], xmax = boxlims[4], ymin = -Inf, ymax = Inf),
+            fill = "gray100", alpha = 0.2, linetype = "blank") +
   #specify position here
   geom_linerange(size=8,position=position_dodge(width = dodgevar)) +
   geom_hline(yintercept=0, lty=2) +
-  #specify position here too
-  geom_point(size=4, shape=21, colour= ifelse(forestdf$Lower < 0 & forestdf$Upper < 0 | forestdf$Lower > 0 & forestdf$Upper > 0, "black", "white"), 
+  #specify position here too + color for significance
+  # geom_point(size=4, shape=21, colour= ifelse(forestdf$Lower < 0 & forestdf$Upper < 0 | forestdf$Lower > 0 & forestdf$Upper > 0, "black", "white"), 
+  #            stroke = 1.4, position=position_dodge(width = dodgevar)) +
+  geom_point(size=4, shape=21, colour= ifelse(forestdf$pvalues < .05, "black", "white"), 
              stroke = 1.4, position=position_dodge(width = dodgevar)) +
   scale_fill_manual(values=barCOLS)+
   scale_color_manual(values=dotCOLS)+
@@ -634,33 +640,15 @@ forestplot <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Upper, ymax=Low
 # Add the categories
 forestplot <- forestplot + 
   geom_segment(aes(x = boxlims[1]+.05, xend = boxlims[2]-.05, y = 1.35, yend = 1.35), color = "black", arrow = arrow(length = unit(0.4, "cm"), end = "both", type = "closed")) +
-  geom_text(aes(x = mean(boxlims[1:2]), y = 1.4, label = "Physiological"), color = "black", angle = 270) +
+  geom_text(aes(x = mean(boxlims[1:2]), y = 1.4, label = "Speech"), color = "black", angle = 270) +
   geom_segment(aes(x = boxlims[2]+.05, xend = boxlims[3]-.05, y = 1.35, yend = 1.35), color = "black", arrow = arrow(length = unit(0.4, "cm"), end = "both", type = "closed")) +
   geom_text(aes(x = mean(boxlims[2:3]), y = 1.4, label = "Self-reports"), color = "black", angle = 270) +
   geom_segment(aes(x = boxlims[3]+.05, xend = boxlims[4]-.05, y = 1.35, yend = 1.35), col = "black", arrow = arrow(length = unit(0.4, "cm"), end = "both", type = "closed")) +
-  geom_text(aes(x = mean(boxlims[3:4]), y = 1.4, label = "Speech"), col = "black", angle = 270)
+  geom_text(aes(x = mean(boxlims[3:4]), y = 1.4, label = "Physiological"), col = "black", angle = 270)
 
 # Remove dots in legend
 forestplot <- forestplot + guides(fill = guide_legend(override.aes = list(shape = NA, size = 0)))
 savePlot(forestplot, "forestPlot", widthval = 2600, heightval = 3000) # Display and save plot
-
-### Alternative Forest plot ########
-o <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Lower, ymax=Upper,col=Group,fill=Group)) + 
-  #specify position here
-  geom_linerange(size=1,position=position_dodge(width = 0.5)) +
-  geom_hline(yintercept=0, lty=3) +
-  #specify position here too
-  geom_point(size=3, shape=21, colour="white", stroke = 0.5,position=position_dodge(width = 0.5)) +
-  scale_fill_manual(values=barCOLS)+
-  scale_color_manual(values=dotCOLS)+
-  scale_x_discrete(name="DV") +
-  scale_y_continuous(name="Effect Size (95%CI)", limits = c(-1.05, 1.45)) +
-  coord_flip() +
-  theme_pubr() +
-  plot_theme_apa()+
-  theme(legend.position = "right")
-
-o
 
 # Conduct the paired t-test
 t.test(forestdf$effectsize[forestdf$Group == "Cyberball"], forestdf$effectsize[forestdf$Group == "MIST"])
