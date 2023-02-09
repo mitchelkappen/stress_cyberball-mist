@@ -583,7 +583,7 @@ backup = forestdf
 # forestdf = forestdf[order(forestdf$Group,decreasing=TRUE),]
 
 # you can do the factoring here
-forestdf$Outcome = factor(forestdf$Outcome, levels = c("Jitter", "Shimmer", "Voiced Seg Length", "HNR", "Voiced Seg per Sec.", "F0",
+forestdf$Outcome = factor(forestdf$Outcome, levels = c("Jitter", "Shimmer", "HNR", "Voiced Seg Length", "Voiced Seg per Sec.", "F0",
                                                        "Stress", "Negative Affect",
                                                        "SCRR"
                                                        ))
@@ -591,11 +591,11 @@ forestdf$Outcome = factor(forestdf$Outcome, levels = c("Jitter", "Shimmer", "Voi
 forestdf$effectsize = round(as.numeric(forestdf$effectsize), digits = 2)
 forestdf$Lower = round(as.numeric(forestdf$Lower), digits = 2)
 forestdf$Upper = round(as.numeric(forestdf$Upper), digits = 2)
-forestdf$Beta = round(as.numeric(forestdf$Beta), digits = 3)
-forestdf$SE = round(as.numeric(forestdf$SE), digits = 3)
-forestdf$t = round(as.numeric(forestdf$t), digits = 3)
+forestdf$Beta = round(as.numeric(forestdf$Beta), digits = 2)
+forestdf$SE = round(as.numeric(forestdf$SE), digits = 2)
+forestdf$t = round(as.numeric(forestdf$t), digits = 2)
 
-forestdf$pvalues = collectedPvalues
+forestdf$pvalues = round(as.numeric(collectedPvalues), digits = 3)
 
 #define colours for dots and bars
 # dotCOLS = c("#a6d8f0","#f9b282") # these are actually the bars
@@ -667,3 +667,5 @@ allData$F0semitoneFrom27.5Hz_sma3nz_amean[allData$fileNum == 'Stress Task'] - al
 
 allData$diff <- ave(allData$F0semitoneFrom27.5Hz_sma3nz_amea, factor(allData$fileNum), FUN=function(x) c(NA,diff(x)))
 
+### Temp
+forestdf[forestdf$Outcome == "Jitter", ]
