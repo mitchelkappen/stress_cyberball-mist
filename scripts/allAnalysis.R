@@ -574,6 +574,17 @@ sprintf("Number of participants: %.f", nrow(t.first))
 sprintf("Number of Men: %.f. Number of Women: %.f.", sum(t.first$Sex == 'Man') , sum(t.first$Sex == 'Vrouw')) 
 sprintf("Age, Mean: %.2f, SD: %.2f.", mean(t.first$Age) , sd(t.first$Age))
 
+# Now more specific
+sum(allData$fileNum == 'Control Task')
+sum(allData$fileNum == 'Control Task' & allData$taskType == 'Cyberball')
+sum(allData$fileNum == 'Control Task' & allData$taskType == 'MIST')
+length(unique(allData$participantNum[allData$fileNum == 'Control Task']))
+
+sum(allData$fileNum == 'Stress Task')
+sum(allData$fileNum == 'Stress Task' & allData$taskType == 'Cyberball')
+sum(allData$fileNum == 'Stress Task' & allData$taskType == 'MIST')
+length(unique(allData$participantNum[allData$fileNum == 'Stress Task']))
+
 # Forest Plot ####
 # https://stackoverflow.com/questions/58657802/forest-plot-with-subgroups-in-ggplot2
 library('ggplot2') 
