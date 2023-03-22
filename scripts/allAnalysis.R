@@ -623,6 +623,7 @@ if(removevars == 1){
 
 dodgevar = 0.5
 forestplot <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Upper, ymax=Lower,col=Group,fill=Group, group=Group)) + 
+  
   # Draw some background rectangles to indicate different categories
   geom_rect(aes(xmin = boxlims[1], xmax = boxlims[2], ymin = -Inf, ymax = Inf),
             fill = "gray100", alpha = 0.2, linetype = "blank") +
@@ -630,6 +631,7 @@ forestplot <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Upper, ymax=Low
             fill = "gray96", alpha = 0.2, linetype = "blank") +
   geom_rect(aes(xmin = boxlims[3], xmax = boxlims[4], ymin = -Inf, ymax = Inf),
             fill = "gray100", alpha = 0.2, linetype = "blank") +
+  
   #specify position here
   geom_linerange(size=8,position=position_dodge(width = dodgevar)) +
   geom_hline(yintercept=0, lty=2) +
@@ -641,11 +643,13 @@ forestplot <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Upper, ymax=Low
   scale_fill_manual(values=barCOLS)+
   scale_color_manual(values=dotCOLS)+
   scale_x_discrete(name="") +
+  scale_y_continuous(limits = c(-1, 1.5)) +
   
   # scale_y_continuous(limits = NULL)+
   coord_flip()+
   theme_pubr() +
   plot_theme_apa()+
+  ylab("Effect Size (Cohen's D)") + # Plot is flipped, this is actually the x-axis
   theme(legend.position = "bottom", legend.text = element_text(size = 18), legend.title = element_text(size = 18))
 
 # Add the categories
