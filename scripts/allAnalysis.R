@@ -622,37 +622,40 @@ if(removevars == 1){
 }
 
 dodgevar = 0.5
+##### Make Forest plot ####
 forestplot <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Upper, ymax=Lower,col=Group,fill=Group, group=Group)) + 
-  
-  # Draw some background rectangles to indicate different categories
-  geom_rect(aes(xmin = boxlims[1], xmax = boxlims[2], ymin = -Inf, ymax = Inf),
-            fill = "gray100", alpha = 0.2, linetype = "blank") +
-  geom_rect(aes(xmin = boxlims[2], xmax = boxlims[3], ymin = -Inf, ymax = Inf),
-            fill = "gray96", alpha = 0.2, linetype = "blank") +
-  geom_rect(aes(xmin = boxlims[3], xmax = boxlims[4], ymin = -Inf, ymax = Inf),
+  # Make background white
+  geom_rect(aes(xmin = boxlims[1], xmax = boxlims[4], ymin = -Inf, ymax = Inf),
             fill = "gray100", alpha = 0.2, linetype = "blank") +
   
-  #specify position here
-  geom_linerange(size=8,position=position_dodge(width = dodgevar)) +
-  geom_hline(yintercept=0, lty=2) +
-  #specify position here too + color for significance
-  # geom_point(size=4, shape=21, colour= ifelse(forestdf$Lower < 0 & forestdf$Upper < 0 | forestdf$Lower > 0 & forestdf$Upper > 0, "black", "white"), 
-  #            stroke = 1.4, position=position_dodge(width = dodgevar)) +
-  geom_point(size=4, shape=21, colour= ifelse(forestdf$pvalues < .05, "black", "white"), 
+  # Draw dashed lines to indicate category borders
+  geom_segment(aes(x = boxlims[3], xend = boxlims[3], y = -Inf, yend = 1.5), color = "black", linetype = "longdash") +
+  geom_segment(aes(x = boxlims[2], xend = boxlims[2], y = -Inf, yend = 1.5), color = "black", linetype = "longdash") +
+  
+  # Draw forestplot
+  geom_linerange(size=8,position=position_dodge(width = dodgevar), alpha = ifelse(forestdf$pvalues < .05, 1, 0.5)) +
+  geom_hline(yintercept=0, lty=2, size = 1.5) + # Draw vertical 0 line
+  
+  # Create dots for effect sizes
+  geom_point(size=4, shape=21, colour= ifelse(forestdf$pvalues < .05, "black", "white"),
              stroke = 1.4, position=position_dodge(width = dodgevar)) +
+  
+  # Set bar and dot colors
   scale_fill_manual(values=barCOLS)+
   scale_color_manual(values=dotCOLS)+
+  
+  # Set figure specifics
   scale_x_discrete(name="") +
   scale_y_continuous(limits = c(-1, 1.5)) +
   
-  # scale_y_continuous(limits = NULL)+
+  # Set orientation and theme
   coord_flip()+
   theme_pubr() +
   plot_theme_apa()+
-  ylab("Effect Size (Cohen's D)") + # Plot is flipped, this is actually the x-axis
+  ylab("Effect Size (Cohen's D) with 95% CI") + # Plot is flipped, this is actually the x-axis
   theme(legend.position = "bottom", legend.text = element_text(size = 18), legend.title = element_text(size = 18))
 
-# Add the categories
+# Add the category arrows
 forestplot <- forestplot + 
   geom_segment(aes(x = boxlims[1]+.05, xend = boxlims[2]-.05, y = 1.35, yend = 1.35), color = "black", arrow = arrow(length = unit(0.4, "cm"), end = "both", type = "closed")) +
   geom_text(aes(x = mean(boxlims[1:2]), y = 1.4, label = "Speech"), color = "black", angle = 270) +
@@ -661,8 +664,10 @@ forestplot <- forestplot +
   geom_segment(aes(x = boxlims[3]+.05, xend = boxlims[4]-.05, y = 1.35, yend = 1.35), col = "black", arrow = arrow(length = unit(0.4, "cm"), end = "both", type = "closed")) +
   geom_text(aes(x = mean(boxlims[3:4]), y = 1.4, label = "Physiological"), col = "black", angle = 270)
 
-# Remove dots in legend
+# Remove dots (1) and groupname (2) in legend
 forestplot <- forestplot + guides(fill = guide_legend(override.aes = list(shape = NA, size = 0)))
+forestplot <- forestplot + labs(fill = NULL, color = NULL)
+
 savePlot(forestplot, "forestPlot", widthval = 2600, heightval = 3000) # Display and save plot
 
 # Conduct the paired t-test
