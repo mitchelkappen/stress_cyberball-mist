@@ -1,0 +1,34 @@
+R version 4.1.1 (2021-08-10)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19044)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=English_Belgium.1252  LC_CTYPE=English_Belgium.1252    LC_MONETARY=English_Belgium.1252 LC_NUMERIC=C                     LC_TIME=English_Belgium.1252    
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] scales_1.2.1       psych_2.2.9        ggpubr_0.4.0       dplyr_1.0.10       ggplot2_3.4.0      car_3.0-11         Polychrome_1.5.1   ggstatsplot_0.10.0
+ [9] effects_4.2-0      carData_3.0-4      emmeans_1.6.3      lmerTest_3.1-3     lme4_1.1-29        Matrix_1.3-4       ltm_1.1-1          polycor_0.8-1     
+[17] msm_1.6.9          MASS_7.3-54        lavaanPlot_0.6.2   lavaan_0.6-9       arrow_5.0.0.2     
+
+loaded via a namespace (and not attached):
+  [1] TH.data_1.1-0          minqa_1.2.4            colorspace_2.0-3       ggsignif_0.6.3         ellipsis_0.3.2         rio_0.5.27             estimability_1.3      
+  [8] parameters_0.20.1      rstudioapi_0.13        farver_2.1.1           bit64_4.0.5            fansi_1.0.3            mvtnorm_1.1-2          codetools_0.2-18      
+ [15] splines_4.1.1          mnormt_2.0.2           zeallot_0.1.0          jsonlite_1.7.2         nloptr_1.2.2.2         pbkrtest_0.5.1         broom_0.7.9           
+ [22] DiagrammeR_1.0.9       compiler_4.1.1         backports_1.2.1        assertthat_0.2.1       fastmap_1.1.0          survey_4.1-1           cli_3.4.1             
+ [29] admisc_0.23            visNetwork_2.1.0       htmltools_0.5.2        tools_4.1.1            coda_0.19-4            gtable_0.3.1           glue_1.6.2            
+ [36] Rcpp_1.0.7             cellranger_1.1.0       vctrs_0.5.0            nlme_3.1-152           insight_0.18.8         stringr_1.4.0          openxlsx_4.2.4        
+ [43] lifecycle_1.0.3        rstatix_0.7.0          zoo_1.8-9              ragg_1.2.2             hms_1.1.0              parallel_4.1.1         sandwich_3.0-1        
+ [50] expm_0.999-6           rematch2_2.1.2         RColorBrewer_1.1-3     curl_4.3.2             gridExtra_2.3          stringi_1.7.4          paletteer_1.4.0       
+ [57] bayestestR_0.13.0      boot_1.3-28            zip_2.2.0              systemfonts_1.0.4      rlang_1.0.6            pkgconfig_2.0.3        evaluate_0.14         
+ [64] lattice_0.20-44        purrr_0.3.4            labeling_0.4.2         patchwork_1.1.1        htmlwidgets_1.5.4      cowplot_1.1.1          bit_4.0.4             
+ [71] tidyselect_1.2.0       plyr_1.8.6             magrittr_2.0.3         R6_2.5.1               generics_0.1.3         multcomp_1.4-18        DBI_1.1.1             
+ [78] pillar_1.8.1           haven_2.4.3            foreign_0.8-83         withr_2.5.0            survival_3.2-11        datawizard_0.6.5       scatterplot3d_0.3-42  
+ [85] abind_1.4-5            nnet_7.3-16            tibble_3.1.8           performance_0.10.2     crayon_1.4.1           utf8_1.2.2             tmvnsim_1.0-2         
+ [92] correlation_0.8.3      grid_4.1.1             readxl_1.3.1           data.table_1.14.0      pbivnorm_0.6.0         forcats_0.5.1          digest_0.6.27         
+ [99] xtable_1.8-4           tidyr_1.1.3            numDeriv_2016.8-1.1    textshaping_0.3.6      statsExpressions_1.3.6 stats4_4.1.1           munsell_0.5.0         
+[106] mitools_2.4           

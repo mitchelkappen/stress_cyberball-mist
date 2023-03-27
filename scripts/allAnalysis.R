@@ -1,13 +1,14 @@
 ##############################
 #                            #
-#     All Analysis   V1      #
-#    Audio and Physiology    #
+#         All Analysis       #
+#     Audio, self-reports    #
+#        & Physiology        #
 #       Cyberball-MIST       #
 #                            #
 #############################
 # 
 # Author: Mitchel Kappen 
-# 15-6-2022
+# 27-3-2023
 
 library(arrow) # Parquets
 library(lme4)
@@ -670,19 +671,5 @@ forestplot <- forestplot + labs(fill = NULL, color = NULL)
 
 savePlot(forestplot, "forestPlot", widthval = 2600, heightval = 3000) # Display and save plot
 
-# Conduct the paired t-test
-t.test(forestdf$effectsize[forestdf$Group == "Cyberball"], forestdf$effectsize[forestdf$Group == "MIST"])
-wilcox.test(forestdf$effectsize[forestdf$Group == "Cyberball"], forestdf$effectsize[forestdf$Group == "MIST"], paired = TRUE)
-
-# Non parametric with absolute values
-wilcox.test(abs(forestdf$effectsize[forestdf$Group == "Cyberball"]), abs(forestdf$effectsize[forestdf$Group == "MIST"]), paired = TRUE)
-
-differences <- abs(forestdf$effectsize[forestdf$Group == "Cyberball"]) - abs(forestdf$effectsize[forestdf$Group == "MIST"])
-
-# Create the Q-Q plot
-qqplot(differences, main = "Q-Q Plot", xlab = "Theoretical Quantiles", ylab = "Sample Quantiles")
-qqline(differences)
-
-allData$F0semitoneFrom27.5Hz_sma3nz_amean[allData$fileNum == 'Stress Task'] - allData$F0semitoneFrom27.5Hz_sma3nz_amean[allData$fileNum == 'Control Task'] 
-
-allData$diff <- ave(allData$F0semitoneFrom27.5Hz_sma3nz_amea, factor(allData$fileNum), FUN=function(x) c(NA,diff(x)))
+# Save Environment #####
+sessionInfo()
