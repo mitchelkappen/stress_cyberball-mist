@@ -45,8 +45,7 @@ tasks = c("Cyberball", "MIST")
 
 ##### Loading data ##### 
 # Audio Data
-# audioData <- as.data.frame(read_parquet("../loc_data/final/df_gemaps_func_noisy.parquet"))
-audioData <- as.data.frame(read_parquet("../loc_data/final/df_gemaps_func_16khz_noisy.parquet"))
+audioData <- as.data.frame(read_parquet("../loc_data/df_gemaps_func_16khz_noisy.parquet"))
 
 # Limesurvey Data
 questionData <- as.data.frame(read.csv("../loc_data/QuestionnaireResults.csv")) 
