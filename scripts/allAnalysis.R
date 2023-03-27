@@ -610,7 +610,7 @@ forestdf$pvalues = round(as.numeric(collectedPvalues), digits = 3)
 
 #define colours for dots and bars
 # dotCOLS = c("#a6d8f0","#f9b282") # these are actually the bars
-barCOLS = c("#008fd5","#de6b35")
+barCOLS = c("#56B4E9", "#E69F00")
 dotCOLS = c("#56B4E9", "#E69F00")
 boxlims = c(0.5, 6.5, 10.5, 12.5)
 
@@ -637,7 +637,7 @@ forestplot <- ggplot(forestdf, aes(x=Outcome, y=effectsize, ymin=Upper, ymax=Low
   geom_hline(yintercept=0, lty=2, size = 1.5) + # Draw vertical 0 line
   
   # Create dots for effect sizes
-  geom_point(size=4, shape=21, colour= ifelse(forestdf$pvalues < .05, "black", "white"),
+  geom_point(size=4, shape=21, colour= ifelse(forestdf$pvalues < .05, "black", "white"), alpha = ifelse(forestdf$pvalues < .05, 1, 0.5),
              stroke = 1.4, position=position_dodge(width = dodgevar)) +
   
   # Set bar and dot colors
@@ -686,6 +686,3 @@ qqline(differences)
 allData$F0semitoneFrom27.5Hz_sma3nz_amean[allData$fileNum == 'Stress Task'] - allData$F0semitoneFrom27.5Hz_sma3nz_amean[allData$fileNum == 'Control Task'] 
 
 allData$diff <- ave(allData$F0semitoneFrom27.5Hz_sma3nz_amea, factor(allData$fileNum), FUN=function(x) c(NA,diff(x)))
-
-### Temp
-forestdf[forestdf$Outcome == "Jitter", ]
