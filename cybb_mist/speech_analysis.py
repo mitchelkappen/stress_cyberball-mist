@@ -35,7 +35,6 @@ def analyze_utterance(
         "shimmerLocaldB_sma3nz",
         "HNRdBACF_sma3nz",
     ],
-    #
     # Listen to audio
     audio=True,
     audio_begin_s=10,
@@ -44,6 +43,9 @@ def analyze_utterance(
     plot_type="png",
     # Transform audio
     norm_audio=True,
+    noise_factor=0,
+    show_noise_audio=False,
+    listen_noise_audio=True,
     vad=True,
 ) -> None:
     """Analyze audio quality of a single File."""
@@ -62,20 +64,37 @@ def analyze_utterance(
     arr_orig_wav_n = arr_orig_wav_n.numpy().ravel()
     arr_16khz_n = arr_16khz_n.numpy().ravel()
 
+    # TODO: de noise factor gaan relaten aan gemiddelde energie van de audio
+    # dit dan in DB gaan uitdrukken en zo formuleren als step
+    # ... in order to mitigate OpenSMILEs 
+
+    arr_16khz_n_noisy = None
+    arr_orig_wav_n_noisy = None
+    if noise_factor > 0:
+        noise = (np.random.randn(len(arr_16khz_n)) * noise_factor).astype(np.float32)
+        arr_16khz_n_noisy = arr_16khz_n + noise
+        n = 4
+        arr_orig_wav_n = arr_orig_wav_n[:len(arr_orig_wav_n) - len(arr_orig_wav_n) % n]
+        noise = (np.random.randn(len(arr_orig_wav_n) // n) * noise_factor).astype(np.float32)
+        noise = np.repeat(noise, n)
+        arr_orig_wav_n_noisy = arr_orig_wav_n + noise
+
     ## THe 16khz, 32 bit float wav path
     t_arr_n = np.arange(0, arr_16khz_n.shape[0]) / 16_000
+    t_arr_orig_n = np.arange(0, arr_orig_wav_n.shape[0]) / fs_orig
 
     audio_list = []
-    if audio:  # Listen to audio
+    if audio or listen_noise_audio:  # Listen to audio
         start, stop = audio_begin_s, audio_end_s
-        print(f"Playing from {start} to {stop} seconds")
-        audio_list.append(
-            (
-                "orig norm",
-                arr_orig_wav_n[start * fs_orig : stop * fs_orig],
-                fs_orig,
+        if audio:
+            print(f"Playing from {start} to {stop} seconds")
+            audio_list.append(
+                (
+                    "orig norm",
+                    arr_orig_wav_n[start * fs_orig : stop * fs_orig],
+                    fs_orig,
+                )
             )
-        )
         if norm_audio:
             audio_list.append(
                 (
@@ -84,6 +103,22 @@ def analyze_utterance(
                     16_000,
                 )
             )
+        if listen_noise_audio and noise_factor > 0:
+            audio_list.append(
+                (
+                    "16khz noisy",
+                    arr_16khz_n_noisy[start * 16_000 : stop * 16_000],
+                    16_000,
+                )
+            )
+            audio_list.append(
+                (
+                    "orig noisy",
+                    arr_orig_wav_n_noisy[start * fs_orig : stop * fs_orig],
+                    fs_orig,
+                )
+            )
+
 
     if len(audio_list):
         grid = GridspecLayout(2, len(audio_list))
@@ -107,6 +142,15 @@ def analyze_utterance(
         df_smile_arr_orig_n = smile_lld.process_signal(arr_orig_wav_n, fs_orig)
         df_smile_wav = None
         df_smile_arr_n_16Khz = smile_lld.process_signal(arr_16khz_n, 16_000)
+        df_smile_arr_n_16Khz_noise = None
+        df_smile_arr_n_orig_noise = None
+        if noise_factor > 0:
+            df_smile_arr_n_16Khz_noise = smile_lld.process_signal(
+                arr_16khz_n_noisy, 16_000
+            )
+            df_smile_arr_n_orig_noise = smile_lld.process_signal(
+                arr_orig_wav_n_noisy, fs_orig
+            )
 
     e2e_boundaries_tuning = None
     if vad:
@@ -156,6 +200,18 @@ def analyze_utterance(
         col=1,
         row=1,
     )
+
+    if noise_factor > 0 and show_noise_audio:
+        fr.add_trace(
+            go.Scattergl(name="torch-norm"),  # "opacity": 0.5},
+            hf_y=arr_orig_wav_n_noisy,
+            hf_x=t_arr_orig_n,
+            max_n_samples=10_000 if plot_type in ["png", "return"] else 2500,
+            col=1,
+            row=1,
+    )
+
+
 
     if e2e_boundaries_tuning is not None:
         fr.add_trace(
@@ -225,6 +281,14 @@ def analyze_utterance(
             [
                 ("Smile-orig-n", df_smile_arr_orig_n),
                 ("Smile-16khz-n", df_smile_arr_n_16Khz),
+                *(
+                    [
+                        ("Smile-16khz-noise", df_smile_arr_n_16Khz_noise),
+                        ("Smile-orig-n-noise", df_smile_arr_n_orig_noise),
+                    ]
+                    if noise_factor > 0
+                    else []
+                ),
             ],
             start=2,
         ):
@@ -253,7 +317,7 @@ def analyze_utterance(
     if plot_type == "png":
         fr.show(renderer="png", width=1400)
     elif plot_type == "dash":
-        fr.show_dash(mode="inline", port=8044)
+        fr.show_dash(mode="inline", port=8054)
     elif plot_type == "return":
         return fr
     else:
