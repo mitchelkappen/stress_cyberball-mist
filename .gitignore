@@ -12,3 +12,4 @@ __pycache__/
 pretrained_model_checkpoints
 test.wav
 EEGstudy2_idlab_cloud
+loc_data.zip
