@@ -51,7 +51,7 @@ The following terms:
 Are used interchangeably throughout the code.
 
 
-Repository and data is identical to: https://osf.io/qf6ck/ 
+Repository and data is identical between OSF (https://osf.io/qf6ck/) and Github (https://github.com/mitchelkappen/stress_cyberball-mist)
 
 <br>
 
