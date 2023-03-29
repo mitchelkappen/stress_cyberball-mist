@@ -1,6 +1,5 @@
 transcripts/*
 *.jpeg
-*.pdf
 
 .vscode
 __pycache__/
