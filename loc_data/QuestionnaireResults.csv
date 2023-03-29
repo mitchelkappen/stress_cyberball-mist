@@ -1,0 +1,84 @@
+Respons-ID,Participant Number,Admission Code,Sex,Age,Studies,Current Study,PSS SCORE,SCRS SCORE,DASS SCORES,,,RRS SCORES ,,
+,,,,,,,,,DEPRESSION,ANXIETY,STRESS,TOTAL,REFLECTION,BROODING
+8,1,WLV2s6oXQvnEPCm,Vrouw,25,Nee,,10,1.3,6,4,4,33,8,8
+9,4,0Uf7eMmmvzxntzB,Vrouw,26,Nee,,16,1.1,0,0,0,22,5,5
+10,3,F468RSHDPm1F3bF,Vrouw,19,Ja,Bachelor in de geneeskunde,10,1.2,0,0,0,22,5,5
+11,5,fLamXbWYrpXyrYv,Vrouw,24,Ja,Educatieve Master (verkort traject),12,1.7,2,2,0,41,12,5
+12,2,kBUlKa94aaQt35L,Vrouw,30,Nee,,18,1.4,8,12,2,29,6,6
+13,7,ksZS6oEYBuKOjOW,Vrouw,23,Nee,Afgestudeerd: Master of Science in de Fysica en Sterrenkunde,10,3.4,6,10,2,51,7,16
+14,11,ajhSvmiCWwJYtoX,Vrouw,20,Ja,psychologie,11,1.1,0,2,0,26,7,5
+15,10,RGkCL1PT8XvLNhU,Vrouw,19,Ja,Revalidatiewetenschappen en kinesitherapie,4,1.7,0,2,0,23,5,6
+16,13,J6f3ov1JlBzae39,Vrouw,18,Ja,Farmacie ,17,2.3,4,6,6,37,10,10
+18,15,O8dEkMwNvDbJe9z,Vrouw,28,Nee,,10,1.3,2,0,0,28,6,8
+19,9,e5e8Nd2QnwWNSSh,Vrouw,18,Ja,geschiedenis,11,1.7,12,8,10,26,7,5
+20,23,BZQgbxT0PvWPQZl,Vrouw,19,Ja,Biomedisch laboratoriumtechnologie,5,1.7,4,2,0,22,5,5
+21,6,pC1b070Xfg5fc0c,Vrouw,22,Ja,Klinische psychologie,16,1.9,4,4,6,30,5,8
+22,NONE,xOv8lHjMz8aRr7S,Vrouw,20,Ja,Bachelor of arts in de Geschiedenis,18,3.4,16,14,4,49,8,10
+23,8,yzeRZGzCWX8wtEI,Vrouw,18,Ja,geneeskunde,15,2.8,4,6,0,49,9,9
+24,14,Gs2RJ9HQDaKzukw,Vrouw,26,Ja,Verkorte educatieve master: afstudeerrichting geologie,11,1.4,10,12,6,31,7,6
+25,12,KE8yVnCb0gA2Y2d,Vrouw,24,Ja,Doctoraatsstudent,8,2.9,0,0,2,24,5,6
+27,18,LyR6qfP72RprPyf,Vrouw,24,Nee,,31,1.4,4,4,8,49,9,16
+28,16,3pJamE5987XG8fM,Vrouw,20,Ja,Bachelor Afrikaanse talen en culturen,10,1.8,0,0,0,31,8,8
+29,24,H6OEA8FXzhz9Zc4,Man,18,Ja,Industrieel ingenieur: biowetenschappen,7,2.2,4,2,0,40,12,7
+30,20,neEco5TpRR1E50i,Vrouw,19,Ja,geneeskunde,19,2.8,10,8,8,37,8,9
+31,NONE,xzTBHttvgtWgHtb,Vrouw,22,Ja,Psychologie ,15,2.4,6,2,8,39,7,11
+32,17,jjXj4jZexeLKrRp,Vrouw,19,Ja,Kinesitherapie en revalidatiewetenschappen,18,1.8,14,12,8,42,12,10
+33,26,cCGx1lvpZyCFQtD,Vrouw,22,Ja,Criminologie,15,2.3,6,16,8,41,9,12
+34,21,UCcPCL7efeTxutt,Man,22,Ja,Geschiedenis,8,1.5,0,0,0,31,6,8
+35,19,WaxPjYTQEma1rI9,Vrouw,19,Ja,Psychologie aan de Ugent,11,2.1,2,0,4,27,7,8
+37,22,4oKe1wk5eJzZaHZ,Vrouw,22,Ja,geneeskunde,12,1.2,4,6,4,23,6,5
+38,25,2zvOnP63BrSqitG,Vrouw,23,Ja,Master Communicatiewetenschappen ,19,1.1,10,4,6,24,6,5
+39,31,04tksV9J8zgwAax,Man,23,Ja,Pedagogische wetenschappen,15,2.3,2,6,0,37,7,9
+40,42,7Pwm8FqNlOBwmKF,Vrouw,23,Ja,Diergeneeskunde,11,2.3,2,8,2,50,11,10
+41,32,LffSpyWZIEx7fzs,Vrouw,21,Ja,Criminologische wetenschappen,13,1.9,2,4,0,39,6,9
+42,29,bC2taYVZivEjeN2,Vrouw,21,Ja,Schakelprogramma master sociaal werk,11,1.7,8,10,4,34,11,5
+43,27,InleuQyguBGKnUH,Man,24,Ja,Geschiedenis,13,2.9,2,0,0,38,8,9
+44,50,mFHrHjdGqMgWGuX,Vrouw,24,Ja,2de master diergeneeskunde,17,2.4,14,18,6,31,6,8
+45,NONE,Sev8wGvBPi9jAuW,Vrouw,23,Ja,Revalidatiewetenschappen en kinesitherapie,13,1.6,4,4,4,46,10,10
+46,53,w1zgi5h9uW0CLN6,Man,22,Ja,3 de bachelor rechten,8,1.6,4,0,0,22,5,5
+48,49,4q8LXnXSmHCkAH2,Vrouw,20,Ja,Lichamelijke Opvoeding en Bewegingswetenschappen,24,2.7,22,12,14,56,15,15
+49,28,12nKcR36D1z29CY,Vrouw,18,Ja,Psychologie ,25,2.7,10,20,14,51,13,7
+51,39,WusGAwJahcBJfg4,Man,24,Ja,Diergeneeskunde,15,2.2,14,10,4,36,9,6
+52,55,vcz7dzydgCzRXYC,Man,22,Ja,revalidatiewetenschappen en kinesitherapie,5,1.7,4,4,0,24,5,6
+53,54,XklPHM8Cv9tcOiJ,Vrouw,18,Ja,Criminologische wetenschappen,18,1.8,8,10,12,42,9,11
+54,30,qmpgTfUDyHlaX1x,Vrouw,25,Nee,,19,3.1,12,12,20,48,11,11
+55,48,LBmkMDFydIsERIm,Vrouw,23,Ja,Master sociaal werk,15,2,4,6,0,38,8,8
+56,33,PjDIfnUh31wqrco,Vrouw,21,Ja,rechten,14,1.3,10,2,0,29,6,6
+57,43,jnkNz9ZqmgFUjDa,Vrouw,25,Ja,Diergeneeskunde,19,2.3,10,12,10,36,10,7
+58,64,OYeIXvbq9DEEVu0,Vrouw,20,Ja,lichamelijke opvoeding en bewegingswetenschappen,17,2.4,6,8,2,36,9,9
+59,57,xglsJXqqTKdBkbk,Vrouw,18,Ja,psychologie,13,1.6,0,0,0,32,7,10
+60,34,CbCyaG80LzKumQS,Vrouw,20,Ja,Pedagogische Wetenschappen,17,2.4,8,8,4,29,5,10
+61,35,2Z9kYtePIzEVNlF,Vrouw,18,Ja,Psychologie ,11,2.4,2,0,2,26,5,6
+62,36,ti9KE9mqOWPhQsw,Vrouw,18,Ja,Pedagogische wetenschappen,10,2.1,2,0,0,24,6,6
+63,51,U2Xao2ifsPLd7jw,Vrouw,19,Ja,Pedagogische wetenschappen aan UGent,24,1.6,0,6,2,44,15,8
+64,37,cCRZ43w3xIUA6Wz,Vrouw,19,Ja,Criminologie ,25,3.7,10,14,10,48,11,12
+65,38,usVnzU0DobI3S8t,Vrouw,23,Ja,Klinische Psychologie ,14,1.2,0,4,0,26,5,7
+66,40,pOQhXCznwfTuiWO,Vrouw,23,Ja,Rechten,17,2.3,8,8,2,25,5,5
+67,41,6n9soju3cceLVdU,Vrouw,19,Ja,Revalidatiewetenschappen en kinesitherapie,18,2.4,24,14,10,37,9,8
+68,47,tMHIHakuGz7t1fv,Vrouw,21,Ja,rechten,28,3.5,18,20,14,47,8,12
+69,44,jFqovIYBKTAxOY1,Vrouw,25,Nee,/,15,2.3,10,6,10,48,14,13
+70,45,r73IWax85YUb0hl,Vrouw,18,Ja,Revalidatiewetenschappen en kinesitherapie,15,2.7,2,0,0,57,13,15
+71,46,gc7bbaYz6aA0XkI,Vrouw,22,Ja,Sociaal werk (UGent),15,1.6,6,0,6,35,7,7
+74,52,d5yQr0Uflezr0C1,Vrouw,21,Ja,Criminologische Wetenschappen ,22,2.3,10,4,10,34,10,7
+75,NONE,SSdJyHftG2ZOzo6,Vrouw,21,Ja,Diergeneeskunde,15,2.5,16,12,14,51,18,8
+76,56,IGyFMkmF4g7aaZi,Vrouw,22,Ja,Kinesitherapie en revalidatiewetenschappen,12,1.6,2,4,2,37,9,8
+77,61,iCdRfWWJOjasjwE,Vrouw,20,Ja,Psychologie ,20,2.4,12,10,8,47,14,10
+79,60,HpGCH9ltG7TMJmI,Vrouw,19,Ja,Diergeneeskunde,14,2.2,2,4,2,42,7,9
+80,58,x4Zvyi4eIfxVipV,Vrouw,18,Ja,criminologie,19,2.3,10,14,4,52,13,12
+81,59,NY0kD2sVGDvG7LT,Vrouw,26,Ja,Lager Onderwijs,16,1,0,0,0,23,5,6
+82,62,10RalkLpuSwPzuO,Vrouw,22,Ja,diergeneeskunde,12,1.9,2,2,4,23,5,5
+83,63,dSTGdiDN2qpa6Xw,Vrouw,25,Nee,,16,1.8,2,4,2,50,12,11
+84,NONE,E9G3FNZdo6aXDjh,Vrouw,22,Ja,Handelswetenschappen,12,1.4,0,2,0,33,10,6
+85,NONE,XGyWo028yq36sG6,Vrouw,24,Ja,Master in handelswetenschappen,30,3.1,10,8,4,77,16,18
+86,65,OCIhI6Resh55jnW,Man,28,Nee,,19,3.2,22,12,18,45,8,14
+87,68,2lNcXyX3YKrLzNL,Man,33,Nee,,7,1.1,0,0,2,22,5,5
+88,66,gQr9NZKIL0UK2mK,Man,18,Ja,Industriële Wetenschappen,13,1.4,2,6,2,29,6,6
+89,72,3BXsDndQz6DgFN6,Man,19,Ja,Farmaceutische wetenschappen ,13,1.5,8,10,4,44,12,9
+90,71,vu1tr1JkkKfBzf1,Man,19,Ja,1Ba Farmaceutische Wetenschappen,14,2.4,2,8,2,47,9,12
+91,NONE,55aiP9hMARz0uZ6,Man,21,Ja,politieke wetenschappen - 3e bachelor - internationale politiek ,5,1.1,4,6,4,32,10,6
+92,NONE,2ue3fjPa3o0zHfX,Man,21,Ja,Communicatiemanagement,10,1.8,6,2,2,28,5,5
+93,67,W0gYONzBUvWtZ0p,Man,19,Ja,1e bachelor Rechten,15,2,8,6,6,26,7,6
+94,69,muErVJZodUEjACt,Man,18,Ja,Bio-ingenieur,20,1.4,0,0,0,22,5,5
+95,70,Fxm0eBoFaHCrMD4,Man,23,Ja,Communicatiewetenschappen,14,2.6,8,10,4,36,10,8
+96,73,f9HxU02L6VMd7ZZ,Man,21,Ja,Bestuurskunde en Publiek Management,17,1.7,16,10,6,32,6,12
+97,NONE,cyj7c1RwSK7kjiR,Vrouw,23,Ja,psychologie,20,3,28,28,28,44,10,10

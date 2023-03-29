@@ -1,7 +1,4 @@
 transcripts/*
-*.xlsx
-*.csv
-*.parquet
 *.jpeg
 *.pdf
 
