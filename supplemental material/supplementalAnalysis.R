@@ -33,10 +33,10 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) #Set WD to script lo
 plotDirectory = "C:/Users/mitch/OneDrive - UGent/UGent/Documents/GitHub/stress_cyberball-mist/figures/recovery" # This is super sloppy, but there are errors with relative plotting
 # plotDirectory = "C:/Users/mitch/OneDrive - UGent/Documents/GitHub/stress_cyberball-mist/figures/withBaselines"
 plotDirectory = dirname(rstudioapi::getActiveDocumentContext()$path)
-source("functions.R") # Load document where functions are stored
+source("../scripts/functions.R") # Load document where functions are stored
 options(contrasts = c("contr.sum","contr.poly")) #use this for the p value of the t test
 
-includeBaseline = 0 # 0 if not included, 2 if it should be included
+includeBaseline = 2 # 0 if not included, 2 if it should be included
 nAGQ = 1
 plotPrefix <- "/../figures/"
 pvalues = c() # Create a variable to store all p-values to correct later
@@ -48,8 +48,7 @@ tasks = c("Cyberball", "MIST")
 
 ##### Loading data ##### 
 # Audio Data
-# audioData <- as.data.frame(read_parquet("../loc_data/final/df_gemaps_func_noisy.parquet"))
-audioData <- as.data.frame(read_parquet("../loc_data/final/df_gemaps_func_16khz_noisy.parquet"))
+audioData <- as.data.frame(read_parquet("../loc_data/df_gemaps_func_16khz_noisy.parquet"))
 
 # Limesurvey Data
 questionData <- as.data.frame(read.csv("../loc_data/QuestionnaireResults.csv")) 
@@ -290,6 +289,83 @@ effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0
 # Cohen's D for Forest Plots
 for(i in 1:length(effSummary$taskType)){
   name = 'RMSSD'
+  effectsize = effSummary$effect.size[i] * -1 # Inverted
+  Upper = effSummary$lower.CL[i] * -1 # Inverted
+  Lower = effSummary$upper.CL[i] * -1 # Inverted
+  
+  contrastdf = summary(emmeans0.1$contrasts) # get contrasts
+  Beta = contrastdf$estimate[i] * -1 # Inverted
+  SE = contrastdf$SE[i]
+  t = contrastdf$t.ratio[i] * -1 # Inverted
+  forestdf[nrow(forestdf) + 1,] = c(name, as.character(effSummary$taskType[i]), effectsize, Lower, Upper, Beta, SE, t)
+}
+# Physiological: HRV - HF ######
+formula <- 'hf ~ fileNum * taskType + (1|participantNum)' # Declare formula
+
+dataModel = allData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+
+Anova(d0.1, type = 'III')
+plot(effect("fileNum:taskType", d0.1))
+
+emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+pairs(pairs(emmeans(d0.1, ~ fileNum | taskType)), by = NULL, adjust = "fdr")
+
+# Plot
+figure = behaviorplot(emm0.1, fileNum, taskType, "HRV - HF") # Create plot
+figure = addpvalues(figure, emmeans0.1)
+figure = addpvaluesBetween(figure, emmeans0.2)
+savePlot(figure, "HRV_HF") # Display and save plot
+figureHRVHF = figure
+
+effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
+# Cohen's D for Forest Plots
+for(i in 1:length(effSummary$taskType)){
+  name = 'HF'
+  effectsize = effSummary$effect.size[i] * -1 # Inverted
+  Upper = effSummary$lower.CL[i] * -1 # Inverted
+  Lower = effSummary$upper.CL[i] * -1 # Inverted
+  
+  contrastdf = summary(emmeans0.1$contrasts) # get contrasts
+  Beta = contrastdf$estimate[i] * -1 # Inverted
+  SE = contrastdf$SE[i]
+  t = contrastdf$t.ratio[i] * -1 # Inverted
+  forestdf[nrow(forestdf) + 1,] = c(name, as.character(effSummary$taskType[i]), effectsize, Lower, Upper, Beta, SE, t)
+}
+
+# Physiological: HRV - LF ######
+formula <- 'lf ~ fileNum * taskType + (1|participantNum)' # Declare formula
+
+dataModel = allData # Ensure correct data is taken
+rm(d0.1, d0.2, d0.3, tabel, chosenModel, emmeans0.1, emmeans0.2, emm0.1, figure) # Just to be sure you're not comparing former models for this comparison
+
+d0.1 <- lmer(formula,data=dataModel)
+
+Anova(d0.1, type = 'III')
+plot(effect("fileNum:taskType", d0.1))
+
+emmeans0.1 <- emmeans(d0.1, pairwise ~ fileNum | taskType, adjust ="none", type = "response") #we don't adjust because we do this later
+emmeans0.2 <- emmeans(d0.1, pairwise ~ taskType | fileNum, adjust ="none", type = "response") #we don't adjust because we do this later
+emm0.1 <- summary(emmeans0.1)$emmeans
+emmeans0.1$contrasts
+pairs(pairs(emmeans(d0.1, ~ fileNum | taskType)), by = NULL, adjust = "fdr")
+
+# Plot
+figure = behaviorplot(emm0.1, fileNum, taskType, "HRV - LF") # Create plot
+figure = addpvalues(figure, emmeans0.1)
+figure = addpvaluesBetween(figure, emmeans0.2)
+savePlot(figure, "HRV_LF") # Display and save plot
+figureHRVHF = figure
+
+effSummary <- summary(eff_size(emmeans0.1, sigma=sigma(d0.1), edf=df.residual(d0.1)))
+# Cohen's D for Forest Plots
+for(i in 1:length(effSummary$taskType)){
+  name = 'LF'
   effectsize = effSummary$effect.size[i] * -1 # Inverted
   Upper = effSummary$lower.CL[i] * -1 # Inverted
   Lower = effSummary$upper.CL[i] * -1 # Inverted
