@@ -672,3 +672,44 @@ savePlot(forestplot, "forestPlot", widthval = 2600, heightval = 3000) # Display 
 
 # Save Environment #####
 sessionInfo()
+
+# Do Correlation for Reviewer 2 ######
+# Load necessary libraries
+library(dplyr)
+
+# Correlation analysis for each condition
+correlation_results <- list()
+
+speech_vars <- c("F0semitoneFrom27.5Hz_sma3nz_amean", "jitterLocal_sma3nz_amean", "shimmerLocaldB_sma3nz_amean", "HNRdBACF_sma3nz_amean", "MeanVoicedSegmentLengthSec", "VoicedSegmentsPerSec")
+
+for (var in speech_vars) {
+  # Filter data for the specific condition
+  filtered_data <- filter(allData, )
+  
+  # Perform correlation test
+  result <- cor.test(filtered_data[[var]], filtered_data$VAS_Stress, method = "pearson")
+  
+  # Store results
+  correlation_results[[paste(var, sep = "_")]] <- result
+}
+
+# View results
+correlation_results
+
+#############
+library(corrr)
+library(ggplot2)
+
+dataSmall <- subset(allData, select = c(F0semitoneFrom27.5Hz_sma3nz_amean, jitterLocal_sma3nz_amean, shimmerLocaldB_sma3nz_amean, HNRdBACF_sma3nz_amean, MeanVoicedSegmentLengthSec, VoicedSegmentsPerSec, VAS_Stress))
+
+x <- dataSmall %>% 
+  correlate() %>% 
+  focus(VAS_Stress)
+
+x %>% 
+  mutate(rowname = factor(term, levels = term[order(VAS_Stress)])) %>%  # Order by correlation strength
+  ggplot(aes(x = rowname, y = VAS_Stress)) +
+  geom_bar(stat = "identity") +
+  ylab("Correlation with VAS_Stress") +
+  xlab("Variable") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))  # Rotate x labels for readability
